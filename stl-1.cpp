@@ -1,9 +1,14 @@
 #include <iostream>
 #include <vector>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3043d8b519371e58dfc8aa784d6ad82469716007
 using namespace std;
 
 int main()
 {
+<<<<<<< HEAD
 	//创建一个向量存储 int
 	vector<int> vec;
 	int i;
@@ -35,4 +40,22 @@ int main()
 	}
 
 	return 0;
+=======
+	//创建一个向量存储int
+	vector<int> vec;
+	int i;
+
+	//dislay origin vec size
+	cout<<"vector size = "<<vec.size()<<endl;
+
+	//push five vaule to vectors
+	for(i=0;i<5;i++)
+	{
+		vec.push.back(i);
+	}
+
+	//display vec externed size
+	cout<<"externed vector size = "<<vec.size()<<endl;
+
+>>>>>>> 3043d8b519371e58dfc8aa784d6ad82469716007
 }
