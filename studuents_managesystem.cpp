@@ -252,7 +252,11 @@ class StudentList
 				cout<<"\t\t请选择【1-2】：";
 				string sel;
 				cin>>sel;
-
+				while("1"!==sel&&"2"!==sel)
+				{
+					cout<<"\t\t输入不合法，请重新输入【1-2】：";
+					cin>>sel;
+				}
 			
 			}		
 		}
