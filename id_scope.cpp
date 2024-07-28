@@ -42,9 +42,9 @@ class TimeDate
 			cout<<::year<<" "<<::month<<" "<<day<<" "<<endl;
 		}
 	private:
-		int year;	//成员变量
-		int month;
-		int day;
+		int year=11;	//成员变量
+		int month=12;
+		int day=21;
 };
 
 int main(int argc,const char** argv)
