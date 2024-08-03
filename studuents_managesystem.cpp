@@ -478,7 +478,7 @@ class StudentList
 		//修改学生信息
 		void updateList()
 		{
-			\t\twhile(true)
+			while(true)
 			{
 				system("cls");
 				cout<<"\t\t*************************欢迎来到修改学生信息功能**************************"<<endl;
@@ -492,22 +492,179 @@ class StudentList
 				cin>>sel;
 				while("1"!=sel&&"2"!=sel&&"3"!=sel)
 				{
-					cout<<"\t\t输入不合法，请重新输入:";
+					cout<<"\t\t输入不合法，请重新输入【1-3】:";
 					cin>>sel;
 				}
 				if ("1"==sel)		//修改学生基本信息
 				{
 					bool flag=false;
 					string keyNum;
+					cout<<"\t\t请输入待修改学生的学号："
+					cin>>keyNum;
 					for(int i=0;i<stuList.size();i++)
 					{
-						flag=true;
-						cout<<""
+						if(stuLis[i].stuNum==keyNum)
+						{
+							flag=true;
+							cout<<"\t\t待修改学生基本信息如下："<<endl;
+							cout<<"\t\t------------------------------------------"<<endl;
+							cout<<"\t\t\t";
+							Student::showHeader();
+							cout<<"\t\t------------------------------------------"<<endl;
+							cout<<"\t\t";
+							stuList[i]->showStuInfo();
+							cout<<"\t\t------------------------------------------"<<endl;
+	
+							Student s=stuList[i];
+							cout<<"\t\t请输入修改后的学号：";
+							bool check=false;
+							do
+							{
+								check=false;
+								cin>>s.stuNum;
+								for(int j=0;j<stuList.size();++j)
+								{
+									if(s.stuNum==stuList[j].stuNum&&i!=j)
+									{
+										cout<<"\t\t该学号已被录入，请重新输入学号：";
+										check=true;
+										break;
+									}
+								}
+							}
+							while(check);
+							cout<<"\t\t请输入修改后的姓名：";
+							cin>>s.stuName;
+							cout<<"\t\t请输入修改后的性别：";
+							cin>>s.gender;
+							cout<<"\t\t请输入修改后的年级：";
+							cin>>s.gradeNum;
+							cout<<"\t\t请输入修改后的专业：";
+							cin>>s.department;
+							cout<<"\t\t请输入修改后的班级：";
+							cin>>s.classNum;
+							cout<<"\t\t是否确定修改？（1是 0否）"<<endl;
+							cout<<"\t\t请进行选择【0-1】：";
+							string ch=0;
+							cin>>ch;
+							while("0"!=ch&&"1"!=ch)
+							{
+								cout<<"\t\t输入不合法，请重新选择【0-1】：";
+								cin>>ch;
+							}
+							if("0"==ch)
+							{
+								break;
+							}
+							else
+							{
+								stuList[i]=s;
+								writeFile();
+								cout<<"\t\t修改成功！"<<endl;
+								break;
+							}
+						}
 					}
+					if(!flag)cout<<"\t\t查无此人，无法修改！\n"<<endl;
 				}
 				else if("2"==sel)	//修改学生成绩信息
 				{
-				
+					bool flag=false;
+					string keyNum;
+					cout<<"\t\t请输入待修改学生的学号：";
+					cin>>keyNum;
+					for(int i=0;i<stuList.size();i++)
+					{
+						if(stuList[i].stuNum==keyNum)
+						{
+							flag=true;
+							cout<<"\t\t待修改学生成绩信息如下："<<endl;
+							cout<<"\t\t------------------------------------------------"<<endl;
+							cout<<"\t\t";
+							cout<<left<<setw(8)<<"编号"；
+							Subject::showHeader();
+							cout<<"\t\t------------------------------------------------"<<endl;
+							for(int j=0;j<stuList[i].cps.size();j++)
+							{
+								cout<<"\t\t";
+								cout<<left<<setw(8)<<j+1;
+								stuList[i].cps[j].showCpInfo();
+							}
+							cout<<"\t\t------------------------------------------------"<<endl;
+							Student s=stuList[i];
+							cout<<"\t\t请学则修改方式："<<endl;
+							string option="1";
+							cout<<"\t\t-------------------------------"<<endl;
+							cout<<"\t\t1 基于该学生原有成绩信息进行修改"<<endl;
+							cout<<"\t\t2 清空该学生所有科目及成绩信息"<<endl;
+							cout<<"\t\t-------------------------------"<<endl;
+							cout<<"\t\t请进行选择【1-2】：";
+							cin>>option;
+							while("1"!=option&&"2"!=option)
+							{
+								cout<<"\t\t输入值不合法，请重新选择【1-2】："；
+								cin>>option;
+							}
+							Subject cp;
+							//基于该学生原有成绩修改
+							if("1"==opton)	
+							{
+								s.cps.clear();
+								s.score=0;
+								s.cpNum=0;
+								cout<<"\t\t输入修改后的学科成绩信息："<<endl;
+								int cnt=0;
+								while("1"==option)
+								{
+									cnt++;
+									cout<<"\t\t第"<<cnt<<"科科目名称：";
+									cin>>cp.proName;
+									cout<<"\t\t第"<<cnt<<"科科目成绩：";
+									cin>>cp.proScore;
+									s.cps.push_back(cp);
+									cout<<"\n\t\t添加成功！是否继续添加？（1是 0否）"<<endl;
+									cout<<"\t\t请进行选择【0-1】：";
+									cin>>option;
+									while("0"!=option&&"1"!=option)
+									{
+										cout<<"\t\t输入不合法，请重新选择【0-1】：";
+										cin>>option;
+									}
+								}
+							}
+							//清空该学生所有科目集成及
+							else if("2"==option)
+							{
+								s.cps.clear();
+								s.score=0;
+								s.cpNum=0;
+							}
+							//计算平均分
+							for(int i=0;i<s.cps.size();i++)
+							{
+								s.scroe+=s.cps[i].proScroe;
+							}
+							if(s.cps.size()>0)s.cpNum=s.cps.size();
+							cout<<"\t\t是否确认修改？（1是 0否）"<<endl;
+							cout<<"\t\t请进行选择【0-1】：";
+							string ch="0";
+							cin>>ch;
+							while("0"!=ch&&"1"!=ch)
+							{
+								cout<<"\t\t输入不合法，请重新选择【0-1】：";
+								cin>>ch;
+							}
+							if("0"==ch)break;
+							else
+							{
+								stuList[i]=s;
+								writeFile();
+								cout<<"\t\t修改成功！"<<endl;
+								break;
+							}
+						}
+					}
+					if(!flag)cout<<"\t\t查无此人，无法修改！\n"<<endl;
 				}
 				else	//返回主菜单
 				{
@@ -517,6 +674,47 @@ class StudentList
 				systme("pause");
 
 			}
+		}
+
+		//查询学生信息
+		void selectList()
+		{
+			while(true)
+			{
+				system("cls");
+				cout<<"\t\t**********************欢迎来到查询学生信息功能*********************"<<endl;
+				cout<<"\t\t--------------"<<endl;
+				cout<<"\t\t1  按学号查询"<<endl;
+				cout<<"\t\t2  按姓名查询"<<endl;
+				cout<<"\t\t3  返回主菜单"<<endl;
+				cout<<"\t\t--------------"<<endl;
+				cout<<"\t\t请进行选择【1-3】：";
+				string sel="0";
+				cin>>sel;
+				while("1"!==sel&&"2"!==sel&&"3"!=sel)
+				{
+					cout<<"\t\t输入不合法，请重新输入【1-3】：";
+					cin>>sel;
+				}
+				if("1"==sel)
+				{
+
+				}
+				else if("2"==sel)
+				{
+
+				}
+				else
+				{
+					break;
+				}
+			}
+
+		}
+		//遍历学生列表
+		void displayStu()
+		{
+			
 		}
 };
 
