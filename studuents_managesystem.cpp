@@ -761,6 +761,18 @@ class StudentList
 		}
 		
 		//将学生列表按学好升序排列
+		static bool cmpNum(const Student& s1;Student& s2)
+		{
+			return s1.stuNum<s2.stuNum;
+		}
+
+		//将学生列表按平均分降序排列，平均分相同的再按照学号升序排列
+		static bool cmpscore(const Student& s1;Student& s2)
+		{
+			if(s1.stuNum!=s2.stuNum) return s1.score>s2.score;
+			else return st.stuNum<s2.stuNum;
+		}
+
 
 };
 
