@@ -714,8 +714,54 @@ class StudentList
 		//遍历学生列表
 		void displayStu()
 		{
-			
+			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+			cout<<"\t\t";
+			Student::showHeader();
+			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+			for(int i=0;i<stuList.size();i++)
+			{
+				cout<<"\t\t"；
+				stuList[i].showStuInfo();
+			}
+			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
 		}
+		//查询获奖信息
+		void displayCp()
+		{
+			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+			cout<<"\t\t";
+			cout<<left<<setw(12)<<"学号";
+			cout<<left<<setw(10)<<"姓名";
+			Subject::showHeader();
+			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+			for(int i=0;i<stuList.size();i++)
+			{
+				for(int j=0;j<stuList[i].cps.size();j++)
+				{
+					cout<<"\t\t";
+					cout<<left<<setw(12)<<stuList[i].stuNum;
+					cout<<left<<setw(10)<<stuList[i].stuName;
+					stuList[i].cps[j].showInfo();
+				}
+			}
+			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+		}
+
+		//显示信息列表
+		void displayList()
+		{
+				system("cls");
+				cout<<"\t\t**********************欢迎来到显示信息列表功能*********************"<<endl;
+				cout<<"\t\t表1  学生基本信息一栏表"<<endl;
+				this->displayStu();
+				cout<<"\n\t\t表2  学生成绩信息一栏表"<<endl;
+				this->displayCp();
+				cout<<"\t\t"；
+				system("pause");
+		}
+		
+		//将学生列表按学好升序排列
+
 };
 
 
