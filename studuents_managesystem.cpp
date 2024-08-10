@@ -34,7 +34,7 @@ class Student
 {
 	public:
 		string stuNum;		//学号
-		string stuname；	//姓名
+		string stuName；	//姓名
 		string gender;		//性别
 		int gradeNum;		//年级
 		string department;	//专业
@@ -49,7 +49,7 @@ class Student
 		
 		}
 		//建立构造函数的重构函数
-		Student(string stuNum,string stuName,string gender,int gradeNum,string department,int classNum,vector<subject> cps,int cpNum,double AverageScore)
+		Student(string stuNum,string stuName,string gender,int gradeNum,string department,int classNum,vector<Subject> cps,int cpNum,double AverageScore)
 		{
 			this->stuNum=stuNum;
 			this->stuName=sutName;
@@ -698,11 +698,85 @@ class StudentList
 				}
 				if("1"==sel)
 				{
-
+					string keyNum;
+					book flag=false;
+					cout<<"\t\t请输入待查询学生的学号：";
+					cin>>keyNum;
+					cout<<"\t\t查询结果如下："<<endl;
+					cout<<"\t\t基本信息："<<endl;
+					cout<<"\t\t---------------------------------------------------------------"<<endl;
+					cout<<"\t\t";
+					Student::showHeader();
+					cout<<"\t\t---------------------------------------------------------------"<<endl;
+					for(int i=0;i<stuList.size();i++)
+					{
+						if(stuList[i].stuNum==keyNum)
+						{
+							flag=true;
+							cout<<"\t\t";
+							stuList[i].shwoStuInfo();
+							cout<<"\t\t---------------------------------------------------------------"<<endl;
+							cout<<endl;
+							cout<<"\t\t"<<stuList[i].stuName<<"成绩信息："<<endl;
+							cout<<"\t\t-----------------------------------------------------"<<endl;
+							cout<<"\t\t";
+							cout<<left<<setw(8)<<"编号";
+							Subject::showHeader();
+							cout<<"\t\t-----------------------------------------------------"<<endl;
+							for(int j=0;j<stuList[i].cps.size();j++)
+							{
+								cout<<"\t\t";
+								cout<<left<<setw(8)<<j+1;
+								stuList[i].cps[j].showCpInfo();
+							}
+							cout<<"\t\t------------------------------------------------------"<<endl;
+							break;
+						}
+					}
+					if(!flag)cout<<"\t\t查无此人！\n"<<endl;
+					cout<<"\t\t";
+					system("pause");
 				}
 				else if("2"==sel)
 				{
-
+					string keyName;
+					book flag=false;
+					cout<<"\t\t请输入待查询学生的姓名：";
+					cin>>keyName;
+					cout<<"\t\t查询结果如下："<<endl;
+					cout<<"\t\t基本信息："<<endl;
+					cout<<"\t\t---------------------------------------------------------------"<<endl;
+					cout<<"\t\t";
+					Student::showHeader();
+					cout<<"\t\t---------------------------------------------------------------"<<endl;
+					for(int i=0;i<stuList.size();i++)
+					{
+						if(stuList[i].stuName==keyName)
+						{
+							flag=true;
+							cout<<"\t\t";
+							stuList[i].shwoStuInfo();
+							cout<<"\t\t---------------------------------------------------------------"<<endl;
+							cout<<endl;
+							cout<<"\t\t"<<stuList[i].stuName<<"成绩信息："<<endl;
+							cout<<"\t\t-----------------------------------------------------"<<endl;
+							cout<<"\t\t";
+							cout<<left<<setw(8)<<"编号";
+							Subject::showHeader();
+							cout<<"\t\t-----------------------------------------------------"<<endl;
+							for(int j=0;j<stuList[i].cps.size();j++)
+							{
+								cout<<"\t\t";
+								cout<<left<<setw(8)<<j+1;
+								stuList[i].cps[j].showCpInfo();
+							}
+							cout<<"\t\t------------------------------------------------------"<<endl;
+							break;
+						}
+					}
+					if(!flag)cout<<"\t\t查无此人！\n"<<endl;
+					cout<<"\t\t";
+					system("pause");
 				}
 				else
 				{
@@ -772,8 +846,108 @@ class StudentList
 			if(s1.stuNum!=s2.stuNum) return s1.score>s2.score;
 			else return st.stuNum<s2.stuNum;
 		}
+		
+		//统计学生数据
+		void statisticList()
+		{
+			while(true)
+			{
+				system("cls");
+				cout<<"\t\t*************************欢迎来到统计学生数据功能**************************"<<endl;
+				string sel="0";
+				cout<<"\t\t--------------------"<<endl;
+				cout<<"\t\t1 按学号排序"<<endl;
+				cout<<"\t\t2 修平均分排序"<<endl;
+				cout<<"\t\t3 返回主菜单"<<endl;
+				cout<<"\t\t--------------------"<<endl;
+				cout<<"请进行选择【1-3】：";
+				cin>>sel;
+				while("1"!=sel&&"2"!=sel&&"3"!=sel)
+				{
+					cout<<"\t\t输入不合法，请重新输入【1-3】:";
+					cin>>sel;
+				}
+				if("1"==sel)
+				{
+					sort(stuList.begin(),stuList.end(),cmpNum);
+					cout<<"\t\t按学号升序排列如下："<<endl;
+					this->displayStu();
+					int numMale=0,numFemale=0;
+					for(int i=0;i<stuList.size();i++)
+					{
+						if("男"==stuList[i].gender) numMale++;
+						else if("女"==stuList[i].gender) numFemale++;
+					}
+					cout<<"\t\t一共"<<stuList.size()<<"人，其中男生"<<numMale<<"人，女生"<<numFemale<<"人。"<<endl;
+					cout<<"\t\t";
+					system("pause");
+				}
+				else if("2"==sel)
+				{
+					sort(stuList.begin(),stuList.end(),cmpscore);
+					cout<<"\t\t按平均分降序排列如下："<<endl;
+					this->displayStu();
+					vector<int> z(10);
+					double totalscore=0;
+					for(int i=0;i<stuList.size();++i)
+					{
+						totalscore+=stuList[i].score;
+						if(0<=stuList[i].score&&stuList[i].score<60) z[0]++;
+						else if(60<=stuList[i].score&&stuList[i].score<70) z[1]++;
+						else if(70<=stuList[i].score&&stuList[i].score<80) z[2]++;
+						else if(80<=stuList[i].score&&stuList[i].score<90) z[3]++;
+						else z[4]++;
+					}
+					cout<<"\t\tscore<60-------------------"<<z[0]<<"人"<<endl;
+					cout<<"\t\t60<=score<70---------------"<<z[1]<<"人"<<endl;
+					cout<<"\t\t70<=score<80---------------"<<z[2]<<"人"<<endl;
+					cout<<"\t\t80<=score<90---------------"<<z[3]<<"人"<<endl;
+					cout<<"\t\t90<=score<100--------------"<<z[4]<<"人"<<endl;
+					cout<<"\t\t所有学生平均分："<<totalscore/stuList.size()<<endl;
+					cout<<"\t\t"<<stuList.back().gradeNum<<"级"<<stuList.back().department<<stuList.back().classNum<<"班---";
+					cout<<stuList.back().stuName<<"平均分最低，为"<<stulist.back().score<<"分"<<endl;
+					cout<<"\t\t"<<stuList.fornt().gradeNum<<"级"<<stuList.front().department<<stuList.front().classNum<<"班---";
+					cout<<stuList.front().stuName<<"平均分最低，为"<<stulist.front().score<<"分"<<endl;
+					cout<<"\t\t";
+					system("pause");
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
 
-
+		//清空系统数据
+		void clearList()
+		{
+			while(true)
+			{
+				string sel="0";
+				system("cls");
+				cout<<"\t\t**********************欢迎来到清空数据功能*********************"<<endl;
+				cout<<"\t\t--------------"<<endl;
+				cout<<"\t\t1  确认清空系统数据"<<endl;
+				cout<<"\t\t2  返回主菜单"<<endl;
+				cout<<"\t\t--------------"<<endl;
+				cout<<"\t\t请进行选择【1-2】：";
+				cin>>sel;
+				while("1"!==sel&&"2"!==sel)
+				{
+					cout<<"\t\t输入不合法，请重新输入【1-2】：";
+					cin>>sel;
+				}
+				if("1"==sel)
+				{
+					stuList.clear();
+					cout<<"\t\t清空功能！"<<endl;
+					cout<<"\t\t";
+					system("pause")
+					writeFile();
+				}
+				else break;
+			}
+		}
 };
 
 
@@ -782,6 +956,5 @@ int main()
 	StudentList stulist;
 	stulist.init();	//读入文件数据初始化
 	stulist.menu();	//打开主菜单
-
-	return 0;
+	return  0;
 }
