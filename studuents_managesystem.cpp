@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <string>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -118,7 +119,8 @@ class StudentList
 		void MainMenu()
 		{
 			string sel="0";
-			system("cls");		//清空屏幕
+            system("kill");
+            system("clear");		//清空屏幕
 			cout<<"\t\t\t**********欢迎来到学生成绩管理系统**********"<<endl;
 			cout<<"\t\t\t你可以进入以下的操作："<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
@@ -241,7 +243,7 @@ class StudentList
 		{
 			while(true)
 			{
-				system("cls");
+				system("clear");
 				cout<<"\t\t**********************欢迎来到添加学生信息功能*********************"<<endl;
 				cout<<"\t\t学生基本信息一栏表："<<endl;
 				displayStu();
@@ -323,28 +325,32 @@ class StudentList
 									cin>>option;
 								}
 							}
+							for(int i=0;i<s.cps.size();i++)
+					    	{
+						    	s.score+=s.cps[i].proScore;
+						    }
+					    	if(s.cps.size()>0)s.score/=s.cps.size();	//计算平均分数
+					    	s.cpNum=s.cps.size();
+					    	stuList.push_back(s);
+					    	writeFile();	//将缓存数据写入到文件
+					    	cout<<"\n\t\t该名学生信息添加成功！是否继续添加？（1是 0否）"<<endl;
+					    	cout<<"\t\t请进行选择【0-1】：";
+					    	cin>>flag;
+					    	while("0"!=flag&&"1"!=flag)
+					    	{
+						    	cout<<"\t\t输入不合法，请重新选择【0-1】：";
+						    	cin>>flag;
+						    }
 						}
-						for(int i=0;i<s.cps.size();i++)
-						{
-							s.score+=s.cps[i].proScore;
-						}
-						if(s.cps.size()>0)s.score/=s.cps.size();	//计算平均分数
-						s.cpNum=s.cps.size();
-						stuList.push_back(s);
-						writeFile();	//将缓存数据写入到文件
-						cout<<"\n\t\t该名学生信息添加成功！是否继续添加？（1是 0否）"<<endl;
-						cout<<"\t\t请进行选择【0-1】：";
-						cin>>flag;
-						while("0"!=flag&&"1"!=flag)
-						{
-							cout<<"\t\t输入不合法，请重新选择【0-1】：";
-							cin>>flag;
-						}
-					}
+                        else        //0==option 不添加成绩信息
+                        {
+                            break;
+                        }
+				    }
 					cout<<"\t\t";
 					system("pause");
 				}
-				else
+				else    //2==sel 返回主菜单
 				{
 					break;
 				}	
@@ -356,7 +362,7 @@ class StudentList
 		{
 			while(true)
 			{
-				system("cls");
+				system("clear");
 				cout<<"\t\t**********************欢迎来到删除学生信息功能*********************"<<endl;
 				string sel="0";
 				cout<<"\t\t--------------"<<endl;
@@ -419,15 +425,16 @@ class StudentList
 						cout<<"\t\t查无此人，无法删除！\n"<<endl;
 					}
 					cout<<"\t\t";
-					system("pause");
+					system("kill");
 				}
 				else if("2"==sel)	//选择按姓名删除
 				{
-					string keyName;
+					string KeyName;
 					bool flag=false;
 					cout<<"\t\t请输入待删除学生的姓名：";
-					cin>>keyName;
-					for(vector<Student>::iterator it=stuList.begin();stuList.end()!=it;++it)
+//					cin>>KeyName;
+                    cin>>KeyName;
+                    for(vector<Student>::iterator it=stuList.begin();stuList.end()!=it;++it)
 					{
 						if(it->stuName==KeyName)
 						{
@@ -468,7 +475,7 @@ class StudentList
 						cout<<"\t\t查无此人，无法删除！\n"<<endl;
 					}
 					cout<<"\t\t";
-					systme("pause");
+					system("kill");
 
 				}
 				else
@@ -480,9 +487,10 @@ class StudentList
 		//修改学生信息
 		void updateList()
 		{
-			while(true)
+			Subject cp;
+            while(true)
 			{
-				system("cls");
+				system("clear");
 				cout<<"\t\t*************************欢迎来到修改学生信息功能**************************"<<endl;
 				string sel="0";
 				cout<<"\t\t--------------------"<<endl;
@@ -501,20 +509,21 @@ class StudentList
 				{
 					bool flag=false;
 					string keyNum;
-					cout<<"\t\t请输入待修改学生的学号："
+					cout<<"\t\t请输入待修改学生的学号：";
 					cin>>keyNum;
 					for(int i=0;i<stuList.size();i++)
 					{
-						if(stuLis[i].stuNum==keyNum)
+						if(stuList[i].stuNum==keyNum)
 						{
 							flag=true;
 							cout<<"\t\t待修改学生基本信息如下："<<endl;
 							cout<<"\t\t------------------------------------------"<<endl;
 							cout<<"\t\t\t";
-							Student::showHeader();
-							cout<<"\t\t------------------------------------------"<<endl;
+//                            Student::showHeader();
+                            stuList[i].showHeader();
+                            cout<<"\t\t------------------------------------------"<<endl;
 							cout<<"\t\t";
-							stuList[i]->showStuInfo();
+                            stuList[i].showStuInfo();
 							cout<<"\t\t------------------------------------------"<<endl;
 	
 							Student s=stuList[i];
@@ -583,9 +592,9 @@ class StudentList
 							cout<<"\t\t待修改学生成绩信息如下："<<endl;
 							cout<<"\t\t------------------------------------------------"<<endl;
 							cout<<"\t\t";
-							cout<<left<<setw(8)<<"编号"；
-							Subject::showHeader();
-							cout<<"\t\t------------------------------------------------"<<endl;
+							cout<<left<<setw(8)<<"编号";
+							cp.showHeader();
+                            cout<<"\t\t------------------------------------------------"<<endl;
 							for(int j=0;j<stuList[i].cps.size();j++)
 							{
 								cout<<"\t\t";
@@ -604,12 +613,12 @@ class StudentList
 							cin>>option;
 							while("1"!=option&&"2"!=option)
 							{
-								cout<<"\t\t输入值不合法，请重新选择【1-2】："；
+								cout<<"\t\t输入值不合法，请重新选择【1-2】：";
 								cin>>option;
 							}
-							Subject cp;
+//							Subject cp;
 							//基于该学生原有成绩修改
-							if("1"==opton)	
+							if("1"==option)	
 							{
 								s.cps.clear();
 								s.score=0;
@@ -644,7 +653,7 @@ class StudentList
 							//计算平均分
 							for(int i=0;i<s.cps.size();i++)
 							{
-								s.scroe+=s.cps[i].proScroe;
+								s.score+=s.cps[i].proScore;
 							}
 							if(s.cps.size()>0)s.cpNum=s.cps.size();
 							cout<<"\t\t是否确认修改？（1是 0否）"<<endl;
@@ -673,7 +682,7 @@ class StudentList
 					break;
 				}
 				cout<<"\t\t";
-				systme("pause");
+				system("pause");
 
 			}
 		}
@@ -681,9 +690,11 @@ class StudentList
 		//查询学生信息
 		void selectList()
 		{
-			while(true)
+            Student stu;
+            Subject cp;
+            while(true)
 			{
-				system("cls");
+				system("clear");
 				cout<<"\t\t**********************欢迎来到查询学生信息功能*********************"<<endl;
 				cout<<"\t\t--------------"<<endl;
 				cout<<"\t\t1  按学号查询"<<endl;
@@ -701,30 +712,32 @@ class StudentList
 				if("1"==sel)
 				{
 					string keyNum;
-					book flag=false;
+					bool flag=false;
 					cout<<"\t\t请输入待查询学生的学号：";
 					cin>>keyNum;
 					cout<<"\t\t查询结果如下："<<endl;
 					cout<<"\t\t基本信息："<<endl;
 					cout<<"\t\t---------------------------------------------------------------"<<endl;
 					cout<<"\t\t";
-					Student::showHeader();
-					cout<<"\t\t---------------------------------------------------------------"<<endl;
+//					Student::showHeader();
+                    stu.showHeader();
+                    cout<<"\t\t---------------------------------------------------------------"<<endl;
 					for(int i=0;i<stuList.size();i++)
 					{
 						if(stuList[i].stuNum==keyNum)
 						{
 							flag=true;
 							cout<<"\t\t";
-							stuList[i].shwoStuInfo();
+							stuList[i].showStuInfo();
 							cout<<"\t\t---------------------------------------------------------------"<<endl;
 							cout<<endl;
 							cout<<"\t\t"<<stuList[i].stuName<<"成绩信息："<<endl;
 							cout<<"\t\t-----------------------------------------------------"<<endl;
 							cout<<"\t\t";
 							cout<<left<<setw(8)<<"编号";
-							Subject::showHeader();
-							cout<<"\t\t-----------------------------------------------------"<<endl;
+//							Subject::showHeader();
+                            cp.showHeader();
+                            cout<<"\t\t-----------------------------------------------------"<<endl;
 							for(int j=0;j<stuList[i].cps.size();j++)
 							{
 								cout<<"\t\t";
@@ -742,30 +755,32 @@ class StudentList
 				else if("2"==sel)
 				{
 					string keyName;
-					book flag=false;
+					bool flag=false;
 					cout<<"\t\t请输入待查询学生的姓名：";
 					cin>>keyName;
 					cout<<"\t\t查询结果如下："<<endl;
 					cout<<"\t\t基本信息："<<endl;
 					cout<<"\t\t---------------------------------------------------------------"<<endl;
 					cout<<"\t\t";
-					Student::showHeader();
-					cout<<"\t\t---------------------------------------------------------------"<<endl;
+//					Student::showHeader();
+                    stu.showHeader();
+                    cout<<"\t\t---------------------------------------------------------------"<<endl;
 					for(int i=0;i<stuList.size();i++)
 					{
 						if(stuList[i].stuName==keyName)
 						{
 							flag=true;
 							cout<<"\t\t";
-							stuList[i].shwoStuInfo();
+							stuList[i].showStuInfo();
 							cout<<"\t\t---------------------------------------------------------------"<<endl;
 							cout<<endl;
 							cout<<"\t\t"<<stuList[i].stuName<<"成绩信息："<<endl;
 							cout<<"\t\t-----------------------------------------------------"<<endl;
 							cout<<"\t\t";
 							cout<<left<<setw(8)<<"编号";
-							Subject::showHeader();
-							cout<<"\t\t-----------------------------------------------------"<<endl;
+//							Subject::showHeader();
+                            cp.showHeader();
+                            cout<<"\t\t-----------------------------------------------------"<<endl;
 							for(int j=0;j<stuList[i].cps.size();j++)
 							{
 								cout<<"\t\t";
@@ -790,13 +805,15 @@ class StudentList
 		//遍历学生列表
 		void displayStu()
 		{
-			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+            Student stu;
+            cout<<"\t\t--------------------------------------------------------------------------"<<endl;
 			cout<<"\t\t";
-			Student::showHeader();
-			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+//			Student::showHeader();
+            stu.showHeader();
+            cout<<"\t\t--------------------------------------------------------------------------"<<endl;
 			for(int i=0;i<stuList.size();i++)
 			{
-				cout<<"\t\t"；
+				cout<<"\t\t";
 				stuList[i].showStuInfo();
 			}
 			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
@@ -804,12 +821,14 @@ class StudentList
 		//查询获奖信息
 		void displayCp()
 		{
-			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+            Subject cp;
+            cout<<"\t\t--------------------------------------------------------------------------"<<endl;
 			cout<<"\t\t";
 			cout<<left<<setw(12)<<"学号";
 			cout<<left<<setw(10)<<"姓名";
-			Subject::showHeader();
-			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
+//			Subject::showHeader();
+            cp.showHeader();
+            cout<<"\t\t--------------------------------------------------------------------------"<<endl;
 			for(int i=0;i<stuList.size();i++)
 			{
 				for(int j=0;j<stuList[i].cps.size();j++)
@@ -817,7 +836,7 @@ class StudentList
 					cout<<"\t\t";
 					cout<<left<<setw(12)<<stuList[i].stuNum;
 					cout<<left<<setw(10)<<stuList[i].stuName;
-					stuList[i].cps[j].showInfo();
+					stuList[i].cps[j].showCpInfo();
 				}
 			}
 			cout<<"\t\t--------------------------------------------------------------------------"<<endl;
@@ -826,13 +845,13 @@ class StudentList
 		//显示信息列表
 		void displayList()
 		{
-				system("cls");
+				system("clear");
 				cout<<"\t\t**********************欢迎来到显示信息列表功能*********************"<<endl;
 				cout<<"\t\t表1  学生基本信息一栏表"<<endl;
 				this->displayStu();
 				cout<<"\n\t\t表2  学生成绩信息一栏表"<<endl;
 				this->displayCp();
-				cout<<"\t\t"；
+				cout<<"\t\t";
 				system("pause");
 		}
 		
@@ -846,7 +865,7 @@ class StudentList
 		static bool cmpscore(const Student& s1,Student& s2)
 		{
 			if(s1.stuNum!=s2.stuNum) return s1.score>s2.score;
-			else return st.stuNum<s2.stuNum;
+			else return s1.stuNum<s2.stuNum;
 		}
 		
 		//统计学生数据
@@ -854,7 +873,7 @@ class StudentList
 		{
 			while(true)
 			{
-				system("cls");
+				system("clear");
 				cout<<"\t\t*************************欢迎来到统计学生数据功能**************************"<<endl;
 				string sel="0";
 				cout<<"\t\t--------------------"<<endl;
@@ -908,7 +927,7 @@ class StudentList
 					cout<<"\t\t所有学生平均分："<<totalscore/stuList.size()<<endl;
 					cout<<"\t\t"<<stuList.back().gradeNum<<"级"<<stuList.back().department<<stuList.back().classNum<<"班---";
 					cout<<stuList.back().stuName<<"平均分最低，为"<<stuList.back().score<<"分"<<endl;
-					cout<<"\t\t"<<stuList.fornt().gradeNum<<"级"<<stuList.front().department<<stuList.front().classNum<<"班---";
+					cout<<"\t\t"<<stuList.front().gradeNum<<"级"<<stuList.front().department<<stuList.front().classNum<<"班---";
 					cout<<stuList.front().stuName<<"平均分最低，为"<<stuList.front().score<<"分"<<endl;
 					cout<<"\t\t";
 					system("pause");
@@ -926,7 +945,7 @@ class StudentList
 			while(true)
 			{
 				string sel="0";
-				system("cls");
+				system("clear");
 				cout<<"\t\t**********************欢迎来到清空数据功能*********************"<<endl;
 				cout<<"\t\t--------------"<<endl;
 				cout<<"\t\t1  确认清空系统数据"<<endl;
@@ -944,7 +963,7 @@ class StudentList
 					stuList.clear();
 					cout<<"\t\t清空功能！"<<endl;
 					cout<<"\t\t";
-					system("pause")
+					system("kill");
 					writeFile();
 				}
 				else break;
@@ -957,6 +976,6 @@ int main()
 {
 	StudentList stuinfo;
 	stuinfo.init();	//读入文件数据初始化
-	stuinfo.menu();	//打开主菜单
+	stuinfo.MainMenu();	//打开主菜单
 	return  0;
 }
