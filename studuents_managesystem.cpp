@@ -34,15 +34,15 @@ class Subject
 class Student
 {
 	public:
-		string stuNum;		//学号
-		string stuName;	//姓名
-		string gender;		//性别
-		int gradeNum;		//年级
-		string department;	//专业
-		int classNum;		//班级
-        int score;          //分数
+		string stuNum;		    //学号
+		string stuName;	        //姓名
+		string gender;		    //性别
+		int gradeNum;		    //年级
+		string department;	    //专业
+		int classNum;		    //班级
+        int score;              //分数
 		vector<Subject>	cps;	//学生的各个科目，创建一个Subjuect类型的空vector，用于保存各个科目信息
-		int cpNum;		//科目门数
+		int cpNum;		        //科目门数
 		double AverageScore;	//平均分
 
 		//构造函数
@@ -71,25 +71,25 @@ class Student
 		//输出属性值
 		void showStuInfo()
 		{
-			cout<<left<<setw(12)<<stuNum;			//左对齐+学号+12个空格
-			cout<<left<<setw(10)<<stuName;			//左对齐+姓名+10个空格
-			cout<<left<<setw(6)<<gender;			//左对齐+性别+6个空格
-			cout<<left<<setw(8)<<gradeNum;			//左对齐+年级+8个空格
-			cout<<left<<setw(23)<<department;		//左对齐+专业+23个空格
-			cout<<left<<setw(6)<<classNum;			//左对齐+班级+6个空格
-			cout<<left<<setw(6)<<AverageScore<<endl;	//左对齐+平均分+6个空格+换行
+			cout<<left<<setw(12)<<stuNum;			    //左对齐+(12-学号)个空格+学号
+			cout<<left<<setw(10)<<stuName;			    //左对齐+(10-姓名)个空格+姓名
+			cout<<left<<setw(10)<<gender;			    //左对齐+(10-性别)个空格+性别
+			cout<<left<<setw(10)<<gradeNum;			    //左对齐+(10-年级)个空格+年级
+			cout<<left<<setw(20)<<department;		    //左对齐+(20-专业)个空格+专业
+			cout<<left<<setw(10)<<classNum;			    //左对齐+(10-班级)个空格+班级
+			cout<<left<<setw(10)<<AverageScore<<endl;	//左对齐+(10-平均分)个空格+平均分+换行
 		}
 
 		//输出属性名
 		void showHeader()
 		{
-			cout<<left<<setw(12)<<"学号";			//左对齐+学号+12个空格
-			cout<<left<<setw(10)<<"姓名";			//左对齐+姓名+10个空格
-			cout<<left<<setw(6)<<"性别";			//左对齐+性别+6个空格
-			cout<<left<<setw(8)<<"年级";			//左对齐+年级+8个空格
-			cout<<left<<setw(23)<<"专业";			//左对齐+专业+23个空格
-			cout<<left<<setw(6)<<"班级";			//左对齐+班级+6个空格
-			cout<<left<<setw(6)<<"平均分"<<endl;		//左对齐+平均分+6个空格+换行
+			cout<<left<<setw(12)<<"学号";			    //左对齐+(12-学号)个空格+学号
+			cout<<left<<setw(10)<<"姓名";			    //左对齐+(10-姓名)个空格+姓名
+			cout<<left<<setw(10)<<"性别";			    //左对齐+(10-性别)个空格+性别
+			cout<<left<<setw(10)<<"年级";			    //左对齐+(10-年级)个空格+年级
+			cout<<left<<setw(20)<<"专业";			    //左对齐+(20-专业)个空格+专业
+			cout<<left<<setw(10)<<"班级";			    //左对齐+(10-班级)个空格+班级
+			cout<<left<<setw(10)<<"平均分"<<endl;		//左对齐+(10-平均分)个空格+平均分+换行
 		}
 };
 
@@ -124,21 +124,21 @@ class StudentList
 			cout<<"\t\t\t**********欢迎来到学生成绩管理系统**********"<<endl;
 			cout<<"\t\t\t你可以进入以下的操作："<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
-			cout<<"\t\t\t|		   1    添加学生信息		 |"<<endl;
+			cout<<"\t\t\t|		   1    添加学生信息	           	 |"<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
-			cout<<"\t\t\t|		   2    删除学生信息		 |"<<endl;
+			cout<<"\t\t\t|		   2    删除学生信息	        	 |"<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
-			cout<<"\t\t\t|		   3    修改学生信息		 |"<<endl;
+			cout<<"\t\t\t|		   3    修改学生信息		         |"<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
-			cout<<"\t\t\t|		   4    查询学生信息		 |"<<endl;
+			cout<<"\t\t\t|		   4    查询学生信息		         |"<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
-			cout<<"\t\t\t|		   5    显示信息列表		 |"<<endl;
+			cout<<"\t\t\t|		   5    显示信息列表		         |"<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
-			cout<<"\t\t\t|		   6    统计学生数据		 |"<<endl;
+			cout<<"\t\t\t|		   6    统计学生数据		         |"<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
-			cout<<"\t\t\t|		   7    清空系统数据		 |"<<endl;
+			cout<<"\t\t\t|		   7    清空系统数据	        	 |"<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
-			cout<<"\t\t\t|		   0    推出			 |"<<endl;
+			cout<<"\t\t\t|		   0    退出	    		         |"<<endl;
 			cout<<"\t\t\t|-------------------------------------------|"<<endl;
 			cout<<"\t\t\t请选择【0-7】：";
 			cin>>sel;
@@ -199,49 +199,70 @@ class StudentList
 		//读取文件
 		void readFile()
 		{
-			ifstream ifs;	//以输入方式打开文件
-			ifs.open("stuList.txt",ios::in);	//打开stuList.txt文件，并将数据写入内存
+			ifstream infile;	//以输入方式打开文件
+//			ifs.open("stuList.txt",ios::in);	//打开stuList.txt文件，并将数据写入内存
 			int n=0;	//用来接收学生数量的值
-			
-			ifs>>n;
-			for(int i=0;i<n;i++)
-			{
-				Student stu;
-				ifs>>stu.stuNum>>stu.stuName>>stu.gender>>stu.gradeNum>>stu.department>>stu.classNum>>stu.cpNum>>stu.AverageScore;
-				for(int j=0;j<stu.cpNum;j++)
-				{
-					Subject cp;
-					ifs>>cp.proName>>cp.proScore;
-					stu.cps.push_back(cp);
-				}
-				stuList.push_back(stu);
-			}
-			ifs.close();
+            Student stu_readFile;  
+            Subject cp_readFile;
+
+            infile.open("StudentDatabase.dat",ios::in);  //打开studentDataBase.dat文件，并且将数据写入内存
+            if(!infile)         //文件读取失败，路径错误
+            {
+                cout<<"读取学生数据库失败，请确认数据库文件后再试！"<<endl;
+                return;
+            }
+            else
+            {
+                infile>>n;              //将学生个数写入变量-n;
+                for(int i=0;i<n;i++)
+    			{
+    				infile>>stu_readFile.stuNum>>stu_readFile.stuName>>stu_readFile.gender>>stu_readFile.gradeNum>>stu_readFile.department>>stu_readFile.classNum>>stu_readFile.cpNum>>stu_readFile.AverageScore;
+    				for(int j=0;j<stu_readFile.cpNum;j++)
+    				{
+    					infile>>cp_readFile.proName>>cp_readFile.proScore;
+    					stu_readFile.cps.push_back(cp_readFile);
+    				}
+    				stuList.push_back(stu_readFile);
+    			}
+            }
+			infile.close();
 		}
 		//写入文件
 		void writeFile()
 		{
-			ofstream ofs;
-			ofs.open("stuList.txt",ios::out);	//打开stuList.txt文件，并且写入模式
-			ofs<<stuList.size()<<endl;		//先写入学生的数量
+			ofstream outfile;
+            outfile.open("studentDataBase.dat",ios::out);   //打开studentDataBase.dat文件，并且写入模式
+            
+            if(!outfile)        //打开学生数据库失败，路径错误
+            {
+                cout<<"学生数据库打开失败，请重新确认数据库文件后再试！"<<endl;
+                return;
+            }
+            else
+            {
+                outfile<<stuList.size()<<endl;		//先写入学生的数量
 
-			for(int i=0;i<stuList.size();i++)
-			{
-				ofs<<stuList[i].stuNum<<" "<<stuList[i].stuName<<" "<<stuList[i].gender
-					<<" "<<stuList[i].gradeNum<<" "<<stuList[i].department<<" "<<stuList[i].classNum
-					<<" "<<stuList[i].cpNum<<" "<<stuList[i].AverageScore<<endl;
-				for(int j=0;j<stuList[i].cps.size();j++)
-				{
-					ofs<<stuList[i].cps[j].proName<<" "<<stuList[i].cps[j].proScore<<endl;
-				}
-			}
-			ofs.close();
+	    		for(int i=0;i<stuList.size();i++)
+	    		{
+	    			outfile<<stuList[i].stuNum<<" "<<stuList[i].stuName<<" "<<stuList[i].gender
+	    				<<" "<<stuList[i].gradeNum<<" "<<stuList[i].department<<" "<<stuList[i].classNum
+	    				<<" "<<stuList[i].cpNum<<" "<<stuList[i].AverageScore<<endl;
+	    			for(int j=0;j<stuList[i].cps.size();j++)
+	    			{
+	    				outfile<<stuList[i].cps[j].proName<<" "<<stuList[i].cps[j].proScore<<endl;
+	    			}
+                 }
+            }
+			outfile.close();
 		}
 
 		//添加学生信息
 		void insertList()
 		{
-			while(true)
+			Student stu_insertList;
+			Subject cp_insertList;
+	
+            while(true)
 			{
 				system("clear");
 				cout<<"\t\t**********************欢迎来到添加学生信息功能*********************"<<endl;
@@ -266,16 +287,15 @@ class StudentList
 					while("1"==flag)
 					{
 						cout<<"\t\t输入学生信息："<<endl;
-						cout<<"\t\t学号";
-						Student s;
+						cout<<"\t\t学号:";
 						bool check=false;
 						do
 						{
 							check=false;
-							cin>>s.stuNum;
+							cin>>stu_insertList.stuNum;
 							for(int i=0;i<stuList.size();++i)
 							{
-								if(s.stuNum==stuList[i].stuNum)
+								if(stu_insertList.stuNum==stuList[i].stuNum)
 								{
 									cout<<"\t\t该学号已存在，请重新输入：";
 									check=true;
@@ -284,17 +304,33 @@ class StudentList
 							}
 						}
 						while(check);
-						cout<<"\t\t姓名";
-						cin>>s.stuNum;
-						cout<<"\t\t性别";
-						cin>>s.gender;
-						cout<<"\t\t年级";
-						cin>>s.gradeNum;
-						cout<<"\t\t专业";
-						cin>>s.department;
-						cout<<"\t\t班级";
-						cin>>s.classNum;
-						s.score=0;
+						cout<<"\t\t姓名:";
+						cin>>stu_insertList.stuNum;
+						cout<<"\t\t性别:";
+						cin>>stu_insertList.gender;
+						cout<<"\t\t年级:";
+						cin>>stu_insertList.gradeNum;
+                        while(cin.fail())       //防止用户错误的输入字符
+                        {
+                            cout<<"\t\t输入错误，输出入代表年级的数字"<<endl;
+                            cin.clear();
+                            cin.ignore();
+                            cout<<"\t\t年级：";
+                            cin>>stu_insertList.gradeNum;
+                        }
+                        cout<<"\t\t专业:";
+						cin>>stu_insertList.department;
+						cout<<"\t\t班级:";
+						cin>>stu_insertList.classNum;
+	                    while(cin.fail())       //防止用户错误的输入字符
+                        {
+                            cout<<"\t\t输入错误，输出入代表班级的数字"<<endl;
+                            cin.clear();
+                            cin.ignore();
+                            cout<<"\t\t班级：";
+                            cin>>stu_insertList.classNum;
+                        }
+     					stu_insertList.score=0;
 						string option="1";
 						cout<<"\t\t是否添加成绩信息？（1是 0否）"<<endl;
 						cout<<"\t\t请进行选择【0-1】：";
@@ -310,12 +346,11 @@ class StudentList
 							while("1"==option)
 							{
 								cnt++;
-								Subject cp;
-								cout<<"\t\t第"<<cnt<<"科科目名称";
-								cin>>cp.proName;
-								cout<<"\t\t第"<<cnt<<"科科目成绩";
-								cin>>cp.proScore;
-								s.cps.push_back(cp);
+								cout<<"\t\t第"<<cnt<<"科科目名称:";
+								cin>>cp_insertList.proName;
+								cout<<"\t\t第"<<cnt<<"科科目成绩:";
+								cin>>cp_insertList.proScore;
+								stu_insertList.cps.push_back(cp_insertList);
 								cout<<"\t\t该科成绩信息添加成功！是否继续添加？（1是 0否）"<<endl;
 								cout<<"\t\t请进行选择【0-1】：";
 								cin>>option;		//0：退出;1：继续添加
@@ -325,13 +360,13 @@ class StudentList
 									cin>>option;
 								}
 							}
-							for(int i=0;i<s.cps.size();i++)
+							for(int i=0;i<stu_insertList.cps.size();i++)
 					    	{
-						    	s.score+=s.cps[i].proScore;
+						    	stu_insertList.score+=stu_insertList.cps[i].proScore;
 						    }
-					    	if(s.cps.size()>0)s.score/=s.cps.size();	//计算平均分数
-					    	s.cpNum=s.cps.size();
-					    	stuList.push_back(s);
+					    	if(stu_insertList.cps.size()>0)stu_insertList.score/=stu_insertList.cps.size();	//计算平均分数
+					    	stu_insertList.cpNum=stu_insertList.cps.size();
+					    	stuList.push_back(stu_insertList);
 					    	writeFile();	//将缓存数据写入到文件
 					    	cout<<"\n\t\t该名学生信息添加成功！是否继续添加？（1是 0否）"<<endl;
 					    	cout<<"\t\t请进行选择【0-1】：";
@@ -348,7 +383,9 @@ class StudentList
                         }
 				    }
 					cout<<"\t\t";
-					system("pause");
+                    cout<<"\t\tPlease any key to continue...";
+                    cin.ignore();
+                    cin.get();
 				}
 				else    //2==sel 返回主菜单
 				{
@@ -498,7 +535,7 @@ class StudentList
 				cout<<"\t\t2 修改学生成绩信息"<<endl;
 				cout<<"\t\t3 返回主菜单"<<endl;
 				cout<<"\t\t--------------------"<<endl;
-				cout<<"请进行选择【1-3】：";
+				cout<<"\t\t请进行选择【1-3】：";
 				cin>>sel;
 				while("1"!=sel&&"2"!=sel&&"3"!=sel)
 				{
@@ -682,7 +719,9 @@ class StudentList
 					break;
 				}
 				cout<<"\t\t";
-				system("pause");
+	            cout<<"\t\tPlease any key to continue...";
+                cin.ignore();
+                cin.get();
 
 			}
 		}
@@ -750,7 +789,6 @@ class StudentList
 					}
 					if(!flag)cout<<"\t\t查无此人！\n"<<endl;
 					cout<<"\t\t";
-					system("pause");
 				}
 				else if("2"==sel)
 				{
@@ -793,7 +831,9 @@ class StudentList
 					}
 					if(!flag)cout<<"\t\t查无此人！\n"<<endl;
 					cout<<"\t\t";
-					system("pause");
+	                cout<<"\t\tPlease any key to continue...";
+                    cin.ignore();
+                    cin.get();
 				}
 				else
 				{
@@ -805,11 +845,11 @@ class StudentList
 		//遍历学生列表
 		void displayStu()
 		{
-            Student stu;
+            Student stu_displayStu;
             cout<<"\t\t--------------------------------------------------------------------------"<<endl;
 			cout<<"\t\t";
 //			Student::showHeader();
-            stu.showHeader();
+            stu_displayStu.showHeader();
             cout<<"\t\t--------------------------------------------------------------------------"<<endl;
 			for(int i=0;i<stuList.size();i++)
 			{
@@ -845,15 +885,17 @@ class StudentList
 		//显示信息列表
 		void displayList()
 		{
-				system("clear");
-				cout<<"\t\t**********************欢迎来到显示信息列表功能*********************"<<endl;
-				cout<<"\t\t表1  学生基本信息一栏表"<<endl;
-				this->displayStu();
-				cout<<"\n\t\t表2  学生成绩信息一栏表"<<endl;
-				this->displayCp();
-				cout<<"\t\t";
-				system("pause");
-		}
+            system("clear");
+			cout<<"\t\t**********************欢迎来到显示信息列表功能*********************"<<endl;
+			cout<<"\t\t表1  学生基本信息一栏表"<<endl;
+			this->displayStu();
+			cout<<"\n\t\t表2  学生成绩信息一栏表"<<endl;
+			this->displayCp();
+			cout<<"\t\t";
+            cout<<"\t\tPlease any key to continue...";
+            cin.ignore();
+            cin.get();
+        }
 		
 		//将学生列表按学好升序排列
 		static bool cmpNum(const Student& s1,Student& s2)
@@ -881,7 +923,7 @@ class StudentList
 				cout<<"\t\t2 修平均分排序"<<endl;
 				cout<<"\t\t3 返回主菜单"<<endl;
 				cout<<"\t\t--------------------"<<endl;
-				cout<<"请进行选择【1-3】：";
+				cout<<"\t\t请进行选择【1-3】：";
 				cin>>sel;
 				while("1"!=sel&&"2"!=sel&&"3"!=sel)
 				{
@@ -890,8 +932,7 @@ class StudentList
 				}
 				if("1"==sel)
 				{
-					sort(stuList.begin(),stuList.end(),cmpNum);
-					cout<<"\t\t按学号升序排列如下："<<endl;
+					sort(stuList.begin(),stuList.end(),cmpNum); cout<<"\t\t按学号升序排列如下："<<endl;
 					this->displayStu();
 					int numMale=0,numFemale=0;
 					for(int i=0;i<stuList.size();i++)
@@ -901,7 +942,9 @@ class StudentList
 					}
 					cout<<"\t\t一共"<<stuList.size()<<"人，其中男生"<<numMale<<"人，女生"<<numFemale<<"人。"<<endl;
 					cout<<"\t\t";
-					system("pause");
+                    cout<<"\t\tPlease any key to continue...";
+                    cin.ignore();
+                    cin.get();
 				}
 				else if("2"==sel)
 				{
@@ -930,7 +973,9 @@ class StudentList
 					cout<<"\t\t"<<stuList.front().gradeNum<<"级"<<stuList.front().department<<stuList.front().classNum<<"班---";
 					cout<<stuList.front().stuName<<"平均分最低，为"<<stuList.front().score<<"分"<<endl;
 					cout<<"\t\t";
-					system("pause");
+                    cout<<"\t\tPlease any key to continue...";
+                    cin.ignore();
+                    cin.get();
 				}
 				else
 				{
@@ -960,8 +1005,9 @@ class StudentList
 				}
 				if("1"==sel)
 				{
-					stuList.clear();
-					cout<<"\t\t清空功能！"<<endl;
+					stuList.clear();    //清空vector所有数据
+                   //显示清空过程 
+                    cout<<"\t\t清空功能！"<<endl;
 					cout<<"\t\t";
 					system("kill");
 					writeFile();
@@ -974,8 +1020,8 @@ class StudentList
 
 int main()
 {
-	StudentList stuinfo;
-	stuinfo.init();	//读入文件数据初始化
-	stuinfo.MainMenu();	//打开主菜单
+	StudentList stuinfo_main;
+	stuinfo_main.init();	//读入文件数据初始化
+	stuinfo_main.MainMenu();	//打开主菜单
 	return  0;
 }
