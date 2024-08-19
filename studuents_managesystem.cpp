@@ -461,9 +461,13 @@ class StudentList
 					{
 						cout<<"\t\t查无此人，无法删除！\n"<<endl;
 					}
-					cout<<"\t\t";
-					system("kill");
-				}
+                    cout<<"\t\t";
+					cout<<"\t\tPlease any key to contiune...";
+//					system("kill");
+                    //wait any key to return;
+                    cin.ignore();
+                    cin.get();
+                }
 				else if("2"==sel)	//选择按姓名删除
 				{
 					string KeyName;
