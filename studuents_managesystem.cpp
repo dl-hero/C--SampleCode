@@ -40,7 +40,7 @@ class Student
 		int gradeNum;		    //年级
 		string department;	    //专业
 		int classNum;		    //班级
-        int score;              //分数
+        int score;              //总分数
 		vector<Subject>	cps;	//学生的各个科目，创建一个Subjuect类型的空vector，用于保存各个科目信息
 		int cpNum;		        //科目门数
 		double AverageScore;	//平均分
@@ -364,18 +364,19 @@ class StudentList
 					    	{
 						    	stu_insertList.score+=stu_insertList.cps[i].proScore;
 						    }
-					    	if(stu_insertList.cps.size()>0)stu_insertList.score/=stu_insertList.cps.size();	//计算平均分数
+					    	if(stu_insertList.cps.size()>0)stu_insertList.AverageScore=stu_insertList.score/stu_insertList.cps.size();	//计算平均分数
 					    	stu_insertList.cpNum=stu_insertList.cps.size();
 					    	stuList.push_back(stu_insertList);
 					    	writeFile();	//将缓存数据写入到文件
-					    	cout<<"\n\t\t该名学生信息添加成功！是否继续添加？（1是 0否）"<<endl;
-					    	cout<<"\t\t请进行选择【0-1】：";
-					    	cin>>flag;
-					    	while("0"!=flag&&"1"!=flag)
-					    	{
-						    	cout<<"\t\t输入不合法，请重新选择【0-1】：";
-						    	cin>>flag;
-						    }
+//after get average score,save to file
+//					    	cout<<"\n\t\t该名学生信息添加成功！是否继续添加？（1是 0否）"<<endl;
+//					    	cout<<"\t\t请进行选择【0-1】：";
+//					    	cin>>flag;
+//					    	while("0"!=flag&&"1"!=flag)
+//					    	{
+//						    	cout<<"\t\t输入不合法，请重新选择【0-1】：";
+//						    	cin>>flag;
+//						    }
 						}
                         else        //0==option 不添加成绩信息
                         {
