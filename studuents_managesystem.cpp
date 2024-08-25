@@ -251,7 +251,7 @@ class StudentList
 	    			{
 	    				outfile<<stuList[i].cps[j].proName<<" "<<stuList[i].cps[j].proScore<<endl;
 	    			}
-                 }
+                }
             }
 			outfile.close();
 		}
@@ -360,40 +360,39 @@ class StudentList
 									cin>>option;
 								}
 							}
-							for(int i=0;i<stu_insertList.cps.size();i++)
+	    			    	cout<<"\n\t\t该名学生信息添加成功！是否继续添加？（1是 0否）"<<endl;
+					    	cout<<"\t\t请进行选择【0-1】：";
+					    	cin>>flag;
+					    	while("0"!=flag&&"1"!=flag)
 					    	{
-						    	stu_insertList.score+=stu_insertList.cps[i].proScore;
+						    	cout<<"\t\t输入不合法，请重新选择【0-1】：";
+						    	cin>>flag;
 						    }
-					    	if(stu_insertList.cps.size()>0)stu_insertList.AverageScore=stu_insertList.score/stu_insertList.cps.size();	//计算平均分数
-					    	stu_insertList.cpNum=stu_insertList.cps.size();
-					    	stuList.push_back(stu_insertList);
-					    	writeFile();	//将缓存数据写入到文件
-//after get average score,save to file
-//					    	cout<<"\n\t\t该名学生信息添加成功！是否继续添加？（1是 0否）"<<endl;
-//					    	cout<<"\t\t请进行选择【0-1】：";
-//					    	cin>>flag;
-//					    	while("0"!=flag&&"1"!=flag)
-//					    	{
-//						    	cout<<"\t\t输入不合法，请重新选择【0-1】：";
-//						    	cin>>flag;
-//						    }
 						}
                         else        //0==option 不添加成绩信息
                         {
                             break;
                         }
+		                for(int i=0;i<stu_insertList.cps.size();i++)
+	    	        	{
+		    	        	stu_insertList.score+=stu_insertList.cps[i].proScore;
+			            }
+		            	if(stu_insertList.cps.size()>0)stu_insertList.AverageScore=stu_insertList.score/stu_insertList.cps.size();	//计算平均分数
+		        	    stu_insertList.cpNum=stu_insertList.cps.size();
+		            	stuList.push_back(stu_insertList);
 				    }
 					cout<<"\t\t";
                     cout<<"\t\tPlease any key to continue...";
                     cin.ignore();
                     cin.get();
-				}
+			}
 				else    //2==sel 返回主菜单
 				{
-					break;
+		          	writeFile();	//将缓存数据写入到文件
+			    	break;
 				}	
 			}		
-		}
+    	}
 
 		//删除学生信息
 		void deleteList()
