@@ -10,6 +10,7 @@ class Task
     public:
         string name;
         bool isCompleted;
+        int taskNumber;
 
         Task(const string& name):name(name),isCompleted(false){}
 };
@@ -52,6 +53,11 @@ class TodoList
             {
                 cout<<"["<<(tasks[i].isCompleted?"x":" ")<<"]"<<tasks[i].name<<endl;
             }
+
+            //for hold screen
+            cout<<"Return to please any key...";
+            cin.ignore();
+            cin.get();  //wati user to input keyboard
         }
         int TasksStatus() const
         {
@@ -68,7 +74,6 @@ class TodoList
             ifstream infile;    //open file by read mode
             int index=0;
             Task temptask("test");
-
             infile.open("tasks.dat",ios::in);
             if(!infile)
             {
@@ -81,9 +86,9 @@ class TodoList
                 for(int i=0;i<index;i++)
                 {
                     infile>>temptask.name>>temptask.isCompleted;
+                    tasks.push_back(temptask);
                 }
-                tasks.push_back(temptask);
-            }
+           }
             infile.close();
         }
         void writefile()
@@ -113,8 +118,11 @@ int main()
 {
     TodoList todolist;
 
+    todolist.readfile();
     while(true)
     {
+        system("clear"); 
+
         cout<<"\n--- To-Do List Manager ---\n";
         cout<<"1. Add Task\n";
         cout<<"2. Mark as Comlete\n";
@@ -124,7 +132,6 @@ int main()
         cout<<"Enter your choice:";
 
         int choice=6;
-        todolist.readfile();
         cin>>choice;
 
         switch(choice)
@@ -164,6 +171,7 @@ int main()
                     cout<<"\n No Task, please add new task!\n";
                     break;
                 }
+                system("clear");
                 cout<<"\nYour Task:\n";
                 todolist.displayTasks();
                 break;
