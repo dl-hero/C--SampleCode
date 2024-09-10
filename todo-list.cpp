@@ -11,8 +11,12 @@ class Task
         string name;
         bool isCompleted;
         int number;
+        string finishday;
+        string taskhead;
 
-        Task(const string& name):name(name),isCompleted(false),number(0){}
+        Task(const string& name):name(name),isCompleted(false),number(0),
+            (const string& finishday):finishday(finishday),
+            (const string& taskhead):taskheda(taskhead){}
 };
 
 class TodoList
@@ -23,8 +27,26 @@ class TodoList
     public:
         void addTask(const string& taskName)
         {
-            tasks.push_back(Task(taskName));
-            tasks[tasks.size()].number=tasks.size();
+//            Task temptask;
+            string day;
+            string head;
+           
+            //please input finish day
+            cout<<"/n pleae input the finish day of task:";
+            cin.ignore();
+            getline(cin,day);
+
+            //please input task head
+            cout<<"/n pleae input the head of task:";
+            cin.ignore();
+            getline(cin,head);
+
+//            temptask.name=taskName;
+            Task temptask(taskName,false,0,&day,&head);
+            tasks.push_back(temptask);
+//            tasks.push_back(Task(taskName,,tasks.size(),day,head));
+//            tasks[tasks.size()-1].number=tasks.size();
+ 
         }
         void markAsComplete(int index)
         {
@@ -45,7 +67,9 @@ class TodoList
             }
             else
             {
-                cout<<"invalid task index."<<endl;
+                cout<<"invalid task index and please press any key to countine "<<endl;
+                cin.ignore();
+                cin.get();
             }
         }
         void displayTasks() const
@@ -170,6 +194,9 @@ int main()
                 if(0==temprtn)
                 {
                     cout<<"\n No Task, please add new task!\n";
+                    //hold the screen, and wait user input
+                    cin.ignore();
+                    cin.get();
                     break;
                 }
                 system("clear");
