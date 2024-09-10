@@ -10,9 +10,9 @@ class Task
     public:
         string name;
         bool isCompleted;
-        int taskNumber;
+        int number;
 
-        Task(const string& name):name(name),isCompleted(false){}
+        Task(const string& name):name(name),isCompleted(false),number(0){}
 };
 
 class TodoList
@@ -24,6 +24,7 @@ class TodoList
         void addTask(const string& taskName)
         {
             tasks.push_back(Task(taskName));
+            tasks[tasks.size()].number=tasks.size();
         }
         void markAsComplete(int index)
         {
@@ -51,7 +52,7 @@ class TodoList
         {
             for (size_t i=0;i<tasks.size();++i)
             {
-                cout<<"["<<(tasks[i].isCompleted?"x":" ")<<"]"<<tasks[i].name<<endl;
+                cout<<tasks[i].number<<". "<<"["<<(tasks[i].isCompleted?"x":" ")<<"]"<<tasks[i].name<<endl;
             }
 
             //for hold screen
@@ -85,7 +86,7 @@ class TodoList
                 infile>>index;
                 for(int i=0;i<index;i++)
                 {
-                    infile>>temptask.name>>temptask.isCompleted;
+                    infile>>temptask.name>>temptask.isCompleted>>temptask.number;
                     tasks.push_back(temptask);
                 }
            }
@@ -94,7 +95,7 @@ class TodoList
         void writefile()
         {
             ofstream outfile;   //open file by write mode
-            outfile.open("tasks.dat",ios::out);
+            outfile.open("tasks.dat",ios::out);     //after context of file is clear, write new context to file
             
             if(!outfile)
             {
@@ -107,7 +108,7 @@ class TodoList
                 outfile<<tasks.size()<<endl;
                 for(int i=0;i<tasks.size();i++)
                 {
-                    outfile<<tasks[i].name<<" "<<tasks[i].isCompleted<<endl;
+                    outfile<<tasks[i].name<<" "<<tasks[i].isCompleted<<" "<<tasks[i].number<<endl;
                 }
             }
             outfile.close();
