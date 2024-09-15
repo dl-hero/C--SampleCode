@@ -10,3 +10,5 @@ struct Snake
 
 struct Snake *head=NULL;    //定义蛇尾（链表头）
 struct Snake *tail=NULL;    //定义蛇头（链表尾）
+int key;        //记录键入的值 changeDirection()函数中使用到
+int 
