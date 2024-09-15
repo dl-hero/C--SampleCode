@@ -14,9 +14,8 @@ class Task
         string finishday;
         string taskhead;
 
-        Task(const string& name):name(name),isCompleted(false),number(0),
-            (const string& finishday):finishday(finishday),
-            (const string& taskhead):taskheda(taskhead){}
+        Task(const string& name,const string& finishday,const string& taskhead):name(name),isCompleted(false),number(0),
+            finishday(finishday),taskhead(taskhead){}
 };
 
 class TodoList
@@ -27,26 +26,24 @@ class TodoList
     public:
         void addTask(const string& taskName)
         {
-//            Task temptask;
             string day;
             string head;
            
             //please input finish day
-            cout<<"/n pleae input the finish day of task:";
-            cin.ignore();
+            cout<<"\n pleae input the finish day of task(ex.yy-mm-dd):";
+//            cin.ignore();
             getline(cin,day);
 
             //please input task head
-            cout<<"/n pleae input the head of task:";
-            cin.ignore();
+            cout<<"\n pleae input the head of task:";
+//            cin.ignore();
             getline(cin,head);
 
-//            temptask.name=taskName;
-            Task temptask(taskName,false,0,&day,&head);
-            tasks.push_back(temptask);
-//            tasks.push_back(Task(taskName,,tasks.size(),day,head));
+            Task temptask(taskName,day,head);
+            temptask.number=tasks.size()+1;
 //            tasks[tasks.size()-1].number=tasks.size();
- 
+            tasks.push_back(temptask);
+
         }
         void markAsComplete(int index)
         {
@@ -61,10 +58,23 @@ class TodoList
         }
         void removeTask(int index)
         {
+            string result;
             if(index >=0 && index<tasks.size())
             {
-                tasks.erase(tasks.begin()+index);
-            }
+                cout<<"Remove task:"<<tasks[index].name<<endl;
+                cout<<"Please confirm to remove task, if it is right to Y, if it is not right to N!"<<endl;
+                cin>>result;
+                if ("Y"==result || "y"==result)
+                {
+                    cout<<"removing task"<<endl;
+                    system("sleep 1");          //wait for 1s 
+                    tasks.erase(tasks.begin()+index);
+                }
+                for(int i=index;i<=tasks.size();i++)
+                {
+                    tasks[i].number--;
+                }
+           }
             else
             {
                 cout<<"invalid task index and please press any key to countine "<<endl;
@@ -76,7 +86,8 @@ class TodoList
         {
             for (size_t i=0;i<tasks.size();++i)
             {
-                cout<<tasks[i].number<<". "<<"["<<(tasks[i].isCompleted?"x":" ")<<"]"<<tasks[i].name<<endl;
+                cout<<tasks[i].number<<". "<<"["<<(tasks[i].isCompleted?"x":" ")<<"]"<<tasks[i].name
+                    <<" "<<tasks[i].finishday<<" "<<tasks[i].taskhead<<endl;
             }
 
             //for hold screen
@@ -98,7 +109,7 @@ class TodoList
         {
             ifstream infile;    //open file by read mode
             int index=0;
-            Task temptask("test");
+            Task temptask("test","test","test");
             infile.open("tasks.dat",ios::in);
             if(!infile)
             {
@@ -110,7 +121,7 @@ class TodoList
                 infile>>index;
                 for(int i=0;i<index;i++)
                 {
-                    infile>>temptask.name>>temptask.isCompleted>>temptask.number;
+                    infile>>temptask.name>>temptask.isCompleted>>temptask.number>>temptask.finishday>>temptask.taskhead;
                     tasks.push_back(temptask);
                 }
            }
@@ -132,7 +143,8 @@ class TodoList
                 outfile<<tasks.size()<<endl;
                 for(int i=0;i<tasks.size();i++)
                 {
-                    outfile<<tasks[i].name<<" "<<tasks[i].isCompleted<<" "<<tasks[i].number<<endl;
+                    outfile<<tasks[i].name<<" "<<tasks[i].isCompleted<<" "<<tasks[i].number<<" " 
+                        <<tasks[i].finishday<<" "<<tasks[i].taskhead<<endl;
                 }
             }
             outfile.close();
@@ -153,7 +165,8 @@ int main()
         cout<<"2. Mark as Comlete\n";
         cout<<"3. Remove Task\n";
         cout<<"4. Display Tasks\n";
-        cout<<"5. Exit\n";
+        cout<<"5. Save Tasks\n";
+        cout<<"6. Exit\n";
         cout<<"Enter your choice:";
 
         int choice=6;
@@ -175,7 +188,7 @@ int main()
                 int index;
                 cout<<"Enter the task index to mark as complete:";
                 cin>>index;
-                todolist.markAsComplete(index);
+                todolist.markAsComplete(index-1);
                 break;
                 }
             case 3:     //remove task;
@@ -183,7 +196,7 @@ int main()
                 int index;
                 cout<<"Enter the task index to remove:";
                 cin>>index;
-                todolist.removeTask(index);
+                todolist.removeTask(index-1);
                 break;
                 }
             case 4:     //display tasks
@@ -195,8 +208,9 @@ int main()
                 {
                     cout<<"\n No Task, please add new task!\n";
                     //hold the screen, and wait user input
-                    cin.ignore();
-                    cin.get();
+//                    cin.ignore();
+//                    cin.get();
+                    system("sleep 2");
                     break;
                 }
                 system("clear");
@@ -204,9 +218,15 @@ int main()
                 todolist.displayTasks();
                 break;
                 }
-            case 5:     //exit
-               todolist.writefile();
-                return 0;
+            case 5:
+                cout<<"Task is saved!!!"<<endl;
+                system("sleep 2");
+                todolist.writefile();
+                break;
+            case 6:     //exit
+                todolist.writefile();
+                cout<<"Task is saved!!!"<<endl;
+              return 0;
             default:
                 cout<<endl;
                 cout<<"invalid choice. Please input number for your select again.\n"<<endl;
