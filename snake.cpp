@@ -23,7 +23,7 @@ class SnakeGame
             nodelay(stdscr,true);   //非阻塞模式,多线程并发输入，使程序不用一直在getch()等待用户输入
             curs_set(0);    //隐藏光标
             getmaxyx(stdscr,max_y,max_x);   //获取窗口大小的函数,当前屏幕的行数(max_y)和列数(max_x)
-            window=newwin(height,width,(max_y-height)/2,(max_x-width)/2);
+            window=newwin(height,width,(max_y-height)/2,(max_x-width)/2);   //定义新窗口，参数（高，宽，窗口左上y坐标，窗口左上x坐标）
             box(window,0,0);    //绘制窗口边框
             refresh();
             wrefresh(window);
@@ -53,22 +53,24 @@ class SnakeGame
         }
 
     private:
-       int width,height;
+       int width,height;    //窗口的宽和高
        int score;
        bool gameover;
        int max_x,max_y;
-       WINDOW *window;
-       vector<pair<int,int>> snake;
-       pair<int,int> food;
-       Direction direction=Direction::RIGHT;
+       WINDOW *window;  //定义新窗口
+       vector<pair<int,int>> snake;     //定义snake的位置数组
+       pair<int,int> food;  //定义食物的位置
+       Direction direction=Direction::RIGHT;    //初始化：sanke往右移动
 
        //随机产生一个食物
        void generateFood()
        {
+           chtype foodstr;  //定义带属性的字符串
+
             do
-            {
-                food.first=rand()%(height-2)+1;
-                food.second=rand()%(width-2)+1;
+            {   //rand()
+                food.first=rand()%(height-2)+1;     //获取食物的x位置
+                food.second=rand()%(width-2)+1;     //获取食物的y位置
             }
             while(isSnakeCell(food.first,food.second));
 //测试是否支持颜色显示，可以支持
@@ -83,9 +85,10 @@ class SnakeGame
 */
             start_color();  //开启颜色功能
             init_pair(1,COLOR_RED,COLOR_BLACK);     //初始化颜色对，红字黑背
+            foodstr='@'|COLOR_PAIR(1);
             attron(COLOR_PAIR(1));  //打印不同颜色字体
-//            mvwaddch(window,food.first,food.second,'@');    //打印食物的位置
-            printw("test color!!!");    //打印食物的位置
+//            mvwaddch(window,food.first,food.second,'@');    //打印食物的位置，无颜色属性
+            mvwaddchstr(window,food.first,food.second,&foodstr);    //打印食物的位置，带颜色属性
             attroff(COLOR_PAIR(1)); //打印完成颜色字体
             refresh();
             wrefresh(window); 
@@ -105,7 +108,7 @@ class SnakeGame
        //蛇移动
        void moveSnake()
        {
-            pair<int,int> head=snake.front();
+            pair<int,int> head=snake.front();   //pair[first,second]是模板类，存储两个值的有序对
             pair<int,int> newHead=head;
         
             switch(direction)
