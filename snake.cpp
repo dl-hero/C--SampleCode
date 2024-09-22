@@ -170,7 +170,7 @@ class SnakeGame
             
             //设置食物的颜色和状态
 
-           foodstr='@'|COLOR_PAIR(2)|A_BLINK;
+           foodstr='@'|COLOR_PAIR(2)|A_BOLD;
             attron(COLOR_PAIR(2));  //打印不同颜色字体
             mvwaddchstr(window,food.first,food.second,&foodstr);    //打印食物的位置，带颜色属性
             attroff(COLOR_PAIR(2)); //打印完成颜色字体
