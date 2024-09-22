@@ -1,3 +1,7 @@
+/********************Change History****************************************/
+/*1.add game menu funciotn                            2024-9-22     JinNuo*/
+/*2.add color for game                                2024-9-22     JinNuo*/
+/**************************************************************************/
 #include <iostream>
 #include <ncurses.h>    //ncurses library
 #include <vector>
@@ -14,22 +18,9 @@ class SnakeGame
 {
     public:
         //构造函数，初始化 width和height是通过参数初始化，score和gameover默认值初始化
-        SnakeGame(int width,int height):width(width),height(height),score(0),gameover(false)
+        SnakeGame(int width,int height):width(width),height(height),score(0),gameover(false),menuover(false),gamelevel(500)
         {
             srand(time(nullptr));   //设置随机种子，nullptr:即空指针（null point）也可直接改为NULL或0
-            initscr();  //初始化屏幕
-            keypad(stdscr,true);    //启用/激活键盘输入,允许getch()函数获取功能键
-            noecho();   //关闭回显,或者叫禁止输入字符显示到现在屏幕上
-            nodelay(stdscr,true);   //非阻塞模式,多线程并发输入，使程序不用一直在getch()等待用户输入
-            curs_set(0);    //隐藏光标
-            getmaxyx(stdscr,max_y,max_x);   //获取窗口大小的函数,当前屏幕的行数(max_y)和列数(max_x)
-            window=newwin(height,width,(max_y-height)/2,(max_x-width)/2);   //定义新窗口，参数（高，宽，窗口左上y坐标，窗口左上x坐标）
-            box(window,0,0);    //绘制窗口边框
-            refresh();
-            wrefresh(window);
-            generateFood();
-            snake.push_back(make_pair(height/2,width/2));       //初始化贪吃蛇位置
-            drawSnake();
         }
         //析构函数，推出时关闭
         ~SnakeGame()
@@ -37,25 +28,128 @@ class SnakeGame
             delwin(window);
             endwin();
         }
+        //初始化窗口
+        void initwindow()
+        {
+            initscr();  //初始化屏幕,默认窗口为stdscr
+            keypad(stdscr,true);    //激活功能键和小键盘的输入,允许getch()函数获取功能键和小键盘
+            noecho();   //关闭回显,或者叫禁止输入字符显示到现在屏幕上
+            curs_set(false);    //隐藏光标
+            getmaxyx(stdscr,max_y,max_x);   //获取窗口大小的函数,当前屏幕的行数(max_y)和列数(max_x)
+            window=newwin(height,width,(max_y-height)/2,(max_x-width)/2);   //定义新窗口，参数（高，宽，窗口左上y坐标，窗口左上x坐标）,并且返回指向窗口的结构体指针
+            box(window,0,0);    //绘制窗口边框，0,0是字符默认的行列起始位置
+            refresh();
+            wrefresh(window); 
+ 
+           //将窗口背景设定为黑色
+            //确认终端是否支持颜色显示
+            if(false==has_colors())
+            {
+                mvprintw(height/2,(width-38)/2,"Your teminal does not support color!!!");
+                getch();
+                delwin(window);
+                endwin();
+           }
+            start_color();  //开启颜色功能
+            init_pair(1,COLOR_GREEN,COLOR_GREEN);     //初始化颜色对，背景为绿色
+            init_pair(2,COLOR_RED,COLOR_GREEN);     //初始化为红字绿背,食物颜色
+            init_pair(3,COLOR_BLACK,COLOR_GREEN);     //初始化为黑字绿背,snake颜色
+            initbg();
+
+       }
+
+        //初始化背景色
+        void initbg()
+        {
+           chtype bgscr;
+
+           bgscr=' '|COLOR_PAIR(1);
+           attron(COLOR_PAIR(1));  //开始打印颜色
+           for(int y=0;y<height;y++)
+           {
+               for(int x=0;x<width;x++)
+               {
+                   mvwaddchstr(window,y,x,&bgscr);    //将窗口打印为绿色背景
+               }
+           }
+           attroff(COLOR_PAIR(1)); //完成打印颜色
+        }
+        //初始化食物和snake位置
+        void initfood()
+        {
+            generateFood();
+            snake.push_back(make_pair(height/2,width/2));       //初始化贪吃蛇位置(窗口中心位置), make_pair直接生成pair对象
+            drawSnake();
+        }
+
+        //游戏菜单
+        void menu()
+        {
+            string tempstr;
+
+            attron(COLOR_PAIR(3));  //开始打印颜色
+            tempstr="Welcome to Play Game!!!";
+            mvwprintw(window,(height-5)/2,(width-30)/2,"%s",tempstr.c_str());
+            mvwaddstr(window,(height-3)/2,(width-30)/2,"Please selece game level:");
+            mvwaddstr(window,(height-1)/2,(width-30)/2,"1. easy   2. Middle   3.High    4. exit");
+            attroff(COLOR_PAIR(3));  //开始打印颜色
+            refresh();
+            wrefresh(window);
+
+            int ch=getch();
+            gameover=false;
+
+            switch(ch)
+            {
+                case '1':
+                    gamelevel=500;
+                    break;
+                case '2':
+                    gamelevel=260;
+                    break;
+                case '3':
+                    gamelevel=100;
+                    break;
+                default:
+                    menuover=true;
+                    gameover=true;
+                    break;
+            }
+            initbg();
+            refresh();
+            wrefresh(window);
+        }
+
         //运行游戏
         void run()
         {
-           //循环游戏
-           while(!gameover)
-           {
-                int ch=getch();
-                handleInput(ch);
-                moveSnake();
-                checkCollision();
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-           }
-           showGameOver();
-        }
+            initwindow();
+            while(!menuover)
+            {
+                menu();
+                initfood();
+ 
+                //循环游戏
+               while(!gameover)
+               {
+                    nodelay(stdscr,true);   //非阻塞模式,多线程并发输入，使程序不用一直在getch()等待用户输入
+
+                    int ch=getch();
+                    handleInput(ch);
+                    moveSnake();
+                    checkCollision();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(gamelevel));
+                }
+               showGameOver();
+            }
+       }
 
     private:
        int width,height;    //窗口的宽和高
        int score;
        bool gameover;
+       bool menuover;
+       int gamelevel;
        int max_x,max_y;
        WINDOW *window;  //定义新窗口
        vector<pair<int,int>> snake;     //定义snake的位置数组
@@ -73,23 +167,13 @@ class SnakeGame
                 food.second=rand()%(width-2)+1;     //获取食物的y位置
             }
             while(isSnakeCell(food.first,food.second));
-//测试是否支持颜色显示，可以支持
-/*            if(false==has_colors())
-            {
-                cout<<"not support color!!!"<<endl;
-            }
-            else
-            {
-                cout<<"support color!!!"<<endl;
-            }
-*/
-            start_color();  //开启颜色功能
-            init_pair(1,COLOR_RED,COLOR_BLACK);     //初始化颜色对，红字黑背
-            foodstr='@'|COLOR_PAIR(1);
-            attron(COLOR_PAIR(1));  //打印不同颜色字体
-//            mvwaddch(window,food.first,food.second,'@');    //打印食物的位置，无颜色属性
+            
+            //设置食物的颜色和状态
+
+           foodstr='@'|COLOR_PAIR(2)|A_BLINK;
+            attron(COLOR_PAIR(2));  //打印不同颜色字体
             mvwaddchstr(window,food.first,food.second,&foodstr);    //打印食物的位置，带颜色属性
-            attroff(COLOR_PAIR(1)); //打印完成颜色字体
+            attroff(COLOR_PAIR(2)); //打印完成颜色字体
             refresh();
             wrefresh(window); 
        }
@@ -97,9 +181,12 @@ class SnakeGame
        //描述保存在内存中的蛇
        void drawSnake()
        {
-           for(const auto& cell:snake)
+            //便利snake容器中每个节点，并且打印屏幕
+           for(const auto& cell:snake)      //范围for循环用和引用传递(const auto& e:a) 通过e循环遍历容器a中的元素，而且不会修改a中的内容
            {
-                mvwaddch(window,cell.first,cell.second,'#');
+               attron(COLOR_PAIR(3));  //开始打印颜色
+               mvwaddch(window,cell.first,cell.second,'#'|COLOR_PAIR(3));
+               attron(COLOR_PAIR(3));   //完成打印颜色
            }
            refresh();
            wrefresh(window);
@@ -108,7 +195,7 @@ class SnakeGame
        //蛇移动
        void moveSnake()
        {
-            pair<int,int> head=snake.front();   //pair[first,second]是模板类，存储两个值的有序对
+            pair<int,int> head=snake.front();   //pair[first,second]是模板类，存储两个值的有序对,snake.front():snake vector中第一个元素赋值给head
             pair<int,int> newHead=head;
         
             switch(direction)
@@ -126,15 +213,19 @@ class SnakeGame
                     newHead.second++;
                     break;
             }
-            snake.insert(snake.begin(),newHead);
-            mvwaddch(window,newHead.first,newHead.second,'#');
+            snake.insert(snake.begin(),newHead);    //在第一个元素插入newhead，其他元素依次后移。如果刚开始时，当前的snake变成两个节点
+            attron(COLOR_PAIR(3));  //开始打印颜色
+            mvwaddch(window,newHead.first,newHead.second,'#'|COLOR_PAIR(3));
+            attron(COLOR_PAIR(3));  //开始打印颜色
             refresh();  //将stdscr中变动部分显示到屏幕上
             wrefresh(window);   //刷新window窗口
         
             if(newHead!=food)
             {
-                mvwaddch(window,snake.back().first,snake.back().second,' ');
-                snake.pop_back();
+                attron(COLOR_PAIR(1));  //开始打印颜色
+                mvwaddch(window,snake.back().first,snake.back().second,' '|COLOR_PAIR(1));
+                attron(COLOR_PAIR(1));  //开始打印颜色
+                snake.pop_back();   //删除snake容器的最后一个元素
             }
             else
             {
@@ -199,15 +290,15 @@ class SnakeGame
 
        void showGameOver()
        {
-            clear();        //清屏幕
+
+            nodelay(stdscr,false);   //非阻塞模式,多线程并发输入，使程序不用一直在getch()等待用户输入
             string gameOverText="Game Over!";
             mvprintw(max_y/2,(max_x-gameOverText.length())/2,"%s",gameOverText.c_str());     //在指定位置打印,c_srt()返回字符串首地址
-//            mvprintw(max_y/2,(max_x-gameOverText.length())/2,"Game Over!");     //在指定位置打印,c_srt()返回字符串首地址
             string scoreText="Score: "+to_string(score);    //to_string(xxx)将括号内数字转换称字符串
             mvprintw(max_y/2+1,(max_x-scoreText.length())/2,"%s",scoreText.c_str());
             refresh();  //将stdscr缓冲区中的数据显示在屏幕上
-            getch();    //读取一个字符
-
+            wrefresh(window);
+            getch();    //读取一个字符，为了等待用户输入后退出游戏
        }
 
        bool isSnakeCell(int row,int col)
@@ -225,7 +316,7 @@ class SnakeGame
 
 int main()
 {
-    SnakeGame game(40,20);
+    SnakeGame game(60,20);
     game.run();
     return 0;
 }
