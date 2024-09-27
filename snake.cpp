@@ -54,27 +54,11 @@ class SnakeGame
             init_pair(1,COLOR_GREEN,COLOR_GREEN);     //初始化颜色对，背景为绿色
             init_pair(2,COLOR_RED,COLOR_GREEN);     //初始化为红字绿背,食物颜色
             init_pair(3,COLOR_BLACK,COLOR_GREEN);     //初始化为黑字绿背,snake颜色
-            initbg();
+            wbkgd(window,COLOR_PAIR(1));    //设置窗口背景颜色
 
        }
 
-        //初始化背景色
-        void initbg()
-        {
-           chtype bgscr;
-
-           bgscr=' '|COLOR_PAIR(1);
-           attron(COLOR_PAIR(1));  //开始打印颜色
-           for(int y=0;y<height;y++)
-           {
-               for(int x=0;x<width;x++)
-               {
-                   mvwaddchstr(window,y,x,&bgscr);    //将窗口打印为绿色背景
-               }
-           }
-           attroff(COLOR_PAIR(1)); //完成打印颜色
-        }
-        //初始化食物和snake位置
+       //初始化食物和snake位置
         void initfood()
         {
             generateFood();
@@ -85,14 +69,12 @@ class SnakeGame
         //游戏菜单
         void menu()
         {
-            string tempstr;
-
-            attron(COLOR_PAIR(3));  //开始打印颜色
-            tempstr="Welcome to Play Game!!!";
-            mvwprintw(window,(height-5)/2,(width-30)/2,"%s",tempstr.c_str());
-            mvwaddstr(window,(height-3)/2,(width-30)/2,"Please selece game level:");
-            mvwaddstr(window,(height-1)/2,(width-30)/2,"1. easy   2. Middle   3.High    4. exit");
-            attroff(COLOR_PAIR(3));  //开始打印颜色
+            werase(window);
+            wattron(window,COLOR_PAIR(3));  //开始打印颜色
+            mvwaddstr(window,(height-5)/2,(width-40)/2,"Welcome to Play Game!!!");
+            mvwaddstr(window,(height-3)/2,(width-40)/2,"Please selece game level:");
+            mvwaddstr(window,(height-1)/2,(width-40)/2,"1. easy   2. Middle   3.High    4. exit");
+            wattroff(window,COLOR_PAIR(3));  //开始打印颜色
             refresh();
             wrefresh(window);
 
@@ -115,8 +97,8 @@ class SnakeGame
                     gameover=true;
                     break;
             }
-            initbg();
-            refresh();
+            werase(window);     //清楚指定窗口中的内容
+            refresh();  //将stdscr缓冲区中的数据显示在屏幕上
             wrefresh(window);
         }
 
@@ -128,12 +110,12 @@ class SnakeGame
             {
                 menu();
                 initfood();
- 
+                nodelay(stdscr,true);   //非阻塞模式,多线程并发输入，使程序不用一直在getch()等待用户输入
+
+
                 //循环游戏
                while(!gameover)
                {
-                    nodelay(stdscr,true);   //非阻塞模式,多线程并发输入，使程序不用一直在getch()等待用户输入
-
                     int ch=getch();
                     handleInput(ch);
                     moveSnake();
@@ -163,14 +145,13 @@ class SnakeGame
 
             do
             {   //rand()
-                food.first=rand()%(height-2)+1;     //获取食物的x位置
-                food.second=rand()%(width-2)+1;     //获取食物的y位置
+                food.first=rand()%(height-2)+1;     //获取食物的x位置，范围1~(height-2),也就是范围[m,n]是rand()%(n-m+1)+m
+                food.second=rand()%(width-2)+1;     //获取食物的y位置, 范围1~(width-2)
             }
             while(isSnakeCell(food.first,food.second));
-            
             //设置食物的颜色和状态
 
-           foodstr='@'|COLOR_PAIR(2)|A_BOLD;
+            foodstr='@'|COLOR_PAIR(2)|A_BOLD;
             attron(COLOR_PAIR(2));  //打印不同颜色字体
             mvwaddchstr(window,food.first,food.second,&foodstr);    //打印食物的位置，带颜色属性
             attroff(COLOR_PAIR(2)); //打印完成颜色字体
@@ -278,7 +259,7 @@ class SnakeGame
             }
 
             //检查是否撞到自己身体
-            for(size_t i=1;i<snake.size();i++)
+            for(size_t i=1;i<snake.size();i++)  //size_t：表示无符号整数类型，通常用于内存分配，数组索引和对象大小
             {
                 if(snake[i]==head)  //头与身相碰
                 {
@@ -290,16 +271,23 @@ class SnakeGame
 
        void showGameOver()
        {
-
             nodelay(stdscr,false);   //非阻塞模式,多线程并发输入，使程序不用一直在getch()等待用户输入
+            werase(window);     //清楚window窗口内容
+            refresh();  //将stdscr缓冲区中的数据显示在屏幕上
+            wrefresh(window);
             string gameOverText="Game Over!";
-            mvprintw(max_y/2,(max_x-gameOverText.length())/2,"%s",gameOverText.c_str());     //在指定位置打印,c_srt()返回字符串首地址
+            wattron(window,COLOR_PAIR(3));
+//            mvwaddch(window,max_y/2,(max_x-gameOverText.length())/2,'A');     //在指定位置打印,c_srt()返回字符串首地址
+            mvwprintw(window,max_y/2,(max_x-gameOverText.length())/2,"%s",gameOverText.c_str());     //在指定位置打印,c_srt()返回字符串首地址
             string scoreText="Score: "+to_string(score);    //to_string(xxx)将括号内数字转换称字符串
-            mvprintw(max_y/2+1,(max_x-scoreText.length())/2,"%s",scoreText.c_str());
+            mvwprintw(window,max_y/2+1,(max_x-scoreText.length())/2,"%s",scoreText.c_str());
+            wattroff(window,COLOR_PAIR(3));
             refresh();  //将stdscr缓冲区中的数据显示在屏幕上
             wrefresh(window);
             getch();    //读取一个字符，为了等待用户输入后退出游戏
        }
+
+
 
        bool isSnakeCell(int row,int col)
        {
