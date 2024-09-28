@@ -117,11 +117,12 @@ class SnakeGame
                while(!gameover)
                {
                     int ch=getch();
+                    printw("%d",ch);
                     handleInput(ch);
                     moveSnake();
                     checkCollision();
                     std::this_thread::sleep_for(std::chrono::milliseconds(gamelevel));
-                }
+              }
                showGameOver();
             }
        }
@@ -152,9 +153,7 @@ class SnakeGame
             //设置食物的颜色和状态
 
             foodstr='@'|COLOR_PAIR(2)|A_BOLD;
-            attron(COLOR_PAIR(2));  //打印不同颜色字体
             mvwaddchstr(window,food.first,food.second,&foodstr);    //打印食物的位置，带颜色属性
-            attroff(COLOR_PAIR(2)); //打印完成颜色字体
             refresh();
             wrefresh(window); 
        }
@@ -165,9 +164,7 @@ class SnakeGame
             //便利snake容器中每个节点，并且打印屏幕
            for(const auto& cell:snake)      //范围for循环用和引用传递(const auto& e:a) 通过e循环遍历容器a中的元素，而且不会修改a中的内容
            {
-               attron(COLOR_PAIR(3));  //开始打印颜色
                mvwaddch(window,cell.first,cell.second,'#'|COLOR_PAIR(3));
-               attron(COLOR_PAIR(3));   //完成打印颜色
            }
            refresh();
            wrefresh(window);
@@ -195,17 +192,13 @@ class SnakeGame
                     break;
             }
             snake.insert(snake.begin(),newHead);    //在第一个元素插入newhead，其他元素依次后移。如果刚开始时，当前的snake变成两个节点
-            attron(COLOR_PAIR(3));  //开始打印颜色
             mvwaddch(window,newHead.first,newHead.second,'#'|COLOR_PAIR(3));
-            attron(COLOR_PAIR(3));  //开始打印颜色
             refresh();  //将stdscr中变动部分显示到屏幕上
             wrefresh(window);   //刷新window窗口
         
             if(newHead!=food)
             {
-                attron(COLOR_PAIR(1));  //开始打印颜色
                 mvwaddch(window,snake.back().first,snake.back().second,' '|COLOR_PAIR(1));
-                attron(COLOR_PAIR(1));  //开始打印颜色
                 snake.pop_back();   //删除snake容器的最后一个元素
             }
             else
@@ -275,12 +268,14 @@ class SnakeGame
             werase(window);     //清楚window窗口内容
             refresh();  //将stdscr缓冲区中的数据显示在屏幕上
             wrefresh(window);
-            string gameOverText="Game Over!";
             wattron(window,COLOR_PAIR(3));
-//            mvwaddch(window,max_y/2,(max_x-gameOverText.length())/2,'A');     //在指定位置打印,c_srt()返回字符串首地址
-            mvwprintw(window,max_y/2,(max_x-gameOverText.length())/2,"%s",gameOverText.c_str());     //在指定位置打印,c_srt()返回字符串首地址
-            string scoreText="Score: "+to_string(score);    //to_string(xxx)将括号内数字转换称字符串
-            mvwprintw(window,max_y/2+1,(max_x-scoreText.length())/2,"%s",scoreText.c_str());
+            string gameOverText="Game Over!";
+            mvwprintw(window,height/2,(width-gameOverText.length())/2,"%s",gameOverText.c_str());     //在指定位置打印,c_srt()返回字符串首地址
+            if(false==menuover)
+            {
+                 string scoreText="Score: "+to_string(score);    //to_string(xxx)将括号内数字转换称字符串
+                 mvwprintw(window,height/2+1,(width-scoreText.length())/2,"%s",scoreText.c_str());
+            }
             wattroff(window,COLOR_PAIR(3));
             refresh();  //将stdscr缓冲区中的数据显示在屏幕上
             wrefresh(window);
