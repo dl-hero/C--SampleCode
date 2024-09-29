@@ -1,6 +1,7 @@
 /********************Change History****************************************/
 /*1.add game menu funciotn                            2024-9-22     JinNuo*/
 /*2.add color for game                                2024-9-22     JinNuo*/
+/*3.add the typeo of snake                            2024-9-27     JinNuo*/
 /**************************************************************************/
 #include <iostream>
 #include <ncurses.h>    //ncurses library
@@ -13,6 +14,13 @@ using namespace std;
 
 //定义方向 限定作用域的枚举类，Direction与UP/DOWN/LEFT/RIGHT作用域相同，相当于等价定义 UP=0,DOWN=1,LEFT=2,RIGHT=3
 enum class Direction {UP,DOWN,LEFT,RIGHT};
+
+class SnakeType
+{
+    public:
+        vector<pair<int,int>> location;
+        vector<string> type;
+};
 
 class SnakeGame
 {
@@ -61,9 +69,11 @@ class SnakeGame
        //初始化食物和snake位置
         void initfood()
         {
+            direction=Direction::RIGHT;    //初始化：sanke往右移动
             generateFood();
-            snake.clear(); //清除snake的原有坐标数据
-            snake.push_back(make_pair(height/2,width/2));       //初始化贪吃蛇位置(窗口中心位置), make_pair直接生成pair对象
+            snake.location.clear(); //清除snake的原有坐标数据
+            snake.location.push_back(make_pair(height/2,width/2));       //初始化贪吃蛇位置(窗口中心位置), make_pair直接生成pair对象
+            snake.type.push_back("^");
             drawSnake();
         }
 
@@ -136,7 +146,8 @@ class SnakeGame
        int gamelevel;
        int max_x,max_y;
        WINDOW *window;  //定义新窗口
-       vector<pair<int,int>> snake;     //定义snake的位置数组
+//       vector<pair<int,int>,char,int> snakeall;     //定义snake的位置数组
+       SnakeType snake; //定义snake的类
        pair<int,int> food;  //定义食物的位置
        Direction direction=Direction::RIGHT;    //初始化：sanke往右移动
 
@@ -162,10 +173,10 @@ class SnakeGame
        //描述保存在内存中的蛇
        void drawSnake()
        {
-            //便利snake容器中每个节点，并且打印屏幕
-           for(const auto& cell:snake)      //范围for循环用和引用传递(const auto& e:a) 通过e循环遍历容器a中的元素，而且不会修改a中的内容
+            //遍历snake容器中每个节点，并且打印屏幕
+           for(const auto& cell:snake.location)      //范围for循环用和引用传递(const auto& e:a) 通过e循环遍历容器a中的元素，而且不会修改a中的内容
            {
-               mvwaddch(window,cell.first,cell.second,'#'|COLOR_PAIR(3));
+               mvwaddch(window,cell.first,cell.second,snake.type|COLOR_PAIR(3));
            }
            refresh();
            wrefresh(window);
