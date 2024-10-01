@@ -1,7 +1,7 @@
 /********************Change History****************************************/
 /*1.add game menu funciotn                            2024-9-22     JinNuo*/
 /*2.add color for game                                2024-9-22     JinNuo*/
-/*3.add the typeo of snake                            2024-9-27     JinNuo*/
+/*3.modfiy snake head and body                        2024-9-30     JinNuo*/
 /**************************************************************************/
 #include <iostream>
 #include <ncurses.h>    //ncurses library
@@ -14,13 +14,6 @@ using namespace std;
 
 //定义方向 限定作用域的枚举类，Direction与UP/DOWN/LEFT/RIGHT作用域相同，相当于等价定义 UP=0,DOWN=1,LEFT=2,RIGHT=3
 enum class Direction {UP,DOWN,LEFT,RIGHT};
-
-class SnakeType
-{
-    public:
-        vector<pair<int,int>> location;
-        vector<string> type;
-};
 
 class SnakeGame
 {
@@ -61,7 +54,9 @@ class SnakeGame
             start_color();  //开启颜色功能
             init_pair(1,COLOR_GREEN,COLOR_GREEN);     //初始化颜色对，背景为绿色
             init_pair(2,COLOR_RED,COLOR_GREEN);     //初始化为红字绿背,食物颜色
-            init_pair(3,COLOR_BLACK,COLOR_GREEN);     //初始化为黑字绿背,snake颜色
+            init_pair(3,COLOR_BLACK,COLOR_GREEN);     //初始化为黑字绿背,Menu颜色
+            init_pair(4,COLOR_BLUE,COLOR_GREEN);       //初始化蓝字绿背，snake身颜色
+            init_pair(5,COLOR_YELLOW,COLOR_GREEN);     //初始化为黄字绿背,snake头颜色
             wbkgd(window,COLOR_PAIR(1));    //设置窗口背景颜色
 
        }
@@ -69,11 +64,9 @@ class SnakeGame
        //初始化食物和snake位置
         void initfood()
         {
-            direction=Direction::RIGHT;    //初始化：sanke往右移动
             generateFood();
-            snake.location.clear(); //清除snake的原有坐标数据
-            snake.location.push_back(make_pair(height/2,width/2));       //初始化贪吃蛇位置(窗口中心位置), make_pair直接生成pair对象
-            snake.type.push_back("^");
+            snake.clear(); //清除snake的原有坐标数据
+            snake.push_back(make_pair(height/2,width/2));       //初始化贪吃蛇位置(窗口中心位置), make_pair直接生成pair对象
             drawSnake();
         }
 
@@ -128,7 +121,6 @@ class SnakeGame
                while(!gameover)
                {
                     int ch=getch();
-//                    printw("%d",ch);
                     handleInput(ch);
                     moveSnake();
                     checkCollision();
@@ -146,8 +138,7 @@ class SnakeGame
        int gamelevel;
        int max_x,max_y;
        WINDOW *window;  //定义新窗口
-//       vector<pair<int,int>,char,int> snakeall;     //定义snake的位置数组
-       SnakeType snake; //定义snake的类
+       vector<pair<int,int>> snake;     //定义snake的位置数组
        pair<int,int> food;  //定义食物的位置
        Direction direction=Direction::RIGHT;    //初始化：sanke往右移动
 
@@ -173,10 +164,10 @@ class SnakeGame
        //描述保存在内存中的蛇
        void drawSnake()
        {
-            //遍历snake容器中每个节点，并且打印屏幕
-           for(const auto& cell:snake.location)      //范围for循环用和引用传递(const auto& e:a) 通过e循环遍历容器a中的元素，而且不会修改a中的内容
+            //便利snake容器中每个节点，并且打印屏幕
+           for(const auto& cell:snake)      //范围for循环用和引用传递(const auto& e:a) 通过e循环遍历容器a中的元素，而且不会修改a中的内容
            {
-               mvwaddch(window,cell.first,cell.second,snake.type|COLOR_PAIR(3));
+               mvwaddch(window,cell.first,cell.second,'#'|COLOR_PAIR(5));
            }
            refresh();
            wrefresh(window);
@@ -204,7 +195,10 @@ class SnakeGame
                     break;
             }
             snake.insert(snake.begin(),newHead);    //在第一个元素插入newhead，其他元素依次后移。如果刚开始时，当前的snake变成两个节点
-            mvwaddch(window,newHead.first,newHead.second,'#'|COLOR_PAIR(3));
+            mvwaddch(window,newHead.first,newHead.second,'#'|COLOR_PAIR(5));    //定义蛇头符号
+            refresh();  //将stdscr中变动部分显示到屏幕上
+            wrefresh(window);   //刷新window窗口
+            mvwaddch(window,head.first,head.second,'*'|COLOR_PAIR(4));      //定义蛇身符号
             refresh();  //将stdscr中变动部分显示到屏幕上
             wrefresh(window);   //刷新window窗口
         
