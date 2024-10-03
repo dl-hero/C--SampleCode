@@ -2,6 +2,7 @@
 /*1.add game menu funciotn                            2024-9-22     JinNuo*/
 /*2.add color for game                                2024-9-22     JinNuo*/
 /*3.modfiy snake head and body                        2024-9-30     JinNuo*/
+/*4.add HEROES COUNT                                  2024-10-01    JinNuo*/
 /**************************************************************************/
 #include <iostream>
 #include <ncurses.h>    //ncurses library
