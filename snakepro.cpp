@@ -23,8 +23,9 @@ class Scoredef
     public:
         string name;
         int score;
+        string date_time;
  
-        Scoredef():name("test"),score(0) {}
+        Scoredef():name("test"),score(0),date_time("2000-1-1/00:00:00") {}
         ~Scoredef(){}
 };
 
@@ -72,6 +73,7 @@ class SnakeGame
             init_pair(3,COLOR_BLACK,COLOR_GREEN);     //初始化为黑字绿背,Menu颜色
             init_pair(4,COLOR_BLUE,COLOR_GREEN);       //初始化蓝字绿背，snake身颜色
             init_pair(5,COLOR_YELLOW,COLOR_GREEN);     //初始化为黄字绿背,snake头颜色
+            init_pair(6,COLOR_RED,COLOR_CYAN);          //初始化为红字青背，当前分数高亮显示
             wbkgd(window,COLOR_PAIR(1));    //设置窗口背景颜色
 
        }
@@ -288,7 +290,16 @@ class SnakeGame
        {
             Scoredef scorelastest;
             char temp[10];
-            
+            int i=100;
+            int j=0;
+
+            //获取当前时间
+            time_t now=time(NULL);  //获取当前时间，从1700-1-1开始以秒计数
+            struct tm *local_tm=localtime(&now);    //转换为tm结构体,并且将当前时间转换为本地时间
+            char buffer[20];
+            strftime(buffer,20,"%y-%m-%d/%H:%M:%S",local_tm);   //使用strftime格式化时间
+
+
             nodelay(stdscr,false);   //打开阻塞模式,使程序在getch()等待用户输入
             echo();                        //打开回显
             werase(window);     //清楚window窗口内容
@@ -302,13 +313,15 @@ class SnakeGame
                  string scoreText="Score: "+to_string(score);    //to_string(xxx)将括号内数字转换称字符串
                  mvwprintw(window,height/4+1,(width-scoreText.length())/2,"%s",scoreText.c_str());
                  string inputText="Please input your name:";
-                 mvwprintw(window,height/4+2,(width-inputText.length())/2,"%s",inputText.c_str());
+                 mvwprintw(window,height/4+3,(width-inputText.length())/2,"%s",inputText.c_str());
                  refresh();  //将stdscr缓冲区中的数据显示在屏幕上
                  wrefresh(window);
-                 mvwgetstr(window,height/4+2,(width+inputText.length())/2,temp);
+                 system("sleep 1");
+                 mvwgetstr(window,height/4+3,(width+inputText.length())/2,temp);
                  scorelastest.name=temp;
                  scorelastest.score=score;
-                 for(int i=0;i<scorelist.size();i++)
+                 scorelastest.date_time=buffer;
+                 for(i=0;i<scorelist.size();i++)
                  {
                     if(scorelist[i].score<=scorelastest.score)
                     {
@@ -317,15 +330,29 @@ class SnakeGame
                     }
                  }
            }
-           string headText="Ranking     Name           Score";
-           mvwprintw(window,height/4+3,(width-headText.length())/2,"%s",headText.c_str());
-           for(int j=0;j<=5;j++)
+           string headText="Ranking     Name           Score     Date/Time";
+           mvwprintw(window,height/4+4,(width-headText.length())/4,"%s",headText.c_str());
+           for(j=0;j<=5;j++)
            {
-              string heroeslist_text=to_string(j)+"         "+scorelist[j].name+"             "+to_string(scorelist[j].score);
-              mvwprintw(window,height/4+j+4,(width-headText.length())/2,"%s",heroeslist_text.c_str());
+                string heroname_text=scorelist[j].name;
+                string herodatetime_text=scorelist[j].date_time;
+                mvwprintw(window,height/4+j+5,(width-headText.length())/4+3,"%d",j+1);
+                mvwprintw(window,height/4+j+5,(width-headText.length())/4+12,"%s",heroname_text.c_str());
+                mvwprintw(window,height/4+j+5,(width-headText.length())/4+12+15,"%d",scorelist[j].score);
+                mvwprintw(window,height/4+j+5,(width-headText.length())/4+12+15+10,"%s",herodatetime_text.c_str());
            }
-                
             wattroff(window,COLOR_PAIR(3));
+            if (i<5)
+            {
+                wattron(window,COLOR_PAIR(6)); 
+                string heroname_text=scorelist[i].name;
+                string herodatetime_text=scorelist[i].date_time;
+                mvwprintw(window,height/4+i+5,(width-headText.length())/4+3,"%d",i+1);
+                mvwprintw(window,height/4+i+5,(width-headText.length())/4+12,"%s",heroname_text.c_str());
+                mvwprintw(window,height/4+i+5,(width-headText.length())/4+12+15,"%d",scorelist[i].score);
+                mvwprintw(window,height/4+i+5,(width-headText.length())/4+12+15+10,"%s",herodatetime_text.c_str());
+                wattroff(window,COLOR_PAIR(6));
+            }
             refresh();  //将stdscr缓冲区中的数据显示在屏幕上
             wrefresh(window);
             getch();    //读取一个字符，为了等待用户输入后退出游戏
@@ -359,7 +386,7 @@ class SnakeGame
                 infile>>index;
                 for(int i=0;i<index;i++)
                 {
-                    infile>>scoretemp.name>>scoretemp.score;
+                    infile>>scoretemp.name>>scoretemp.score>>scoretemp.date_time;
                     scorelist.push_back(scoretemp);
                 }
            }
@@ -381,7 +408,7 @@ class SnakeGame
                 outfile<<scorelist.size()<<endl;
                 for(int i=0;i<scorelist.size();i++)
                 {
-                    outfile<<" "<<scorelist[i].name<<" "<<scorelist[i].score<<endl;
+                    outfile<<" "<<scorelist[i].name<<" "<<scorelist[i].score<<" "<<scorelist[i].date_time<<endl;
                 }
             }
             outfile.close();
