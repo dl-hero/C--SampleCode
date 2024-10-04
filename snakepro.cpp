@@ -10,11 +10,23 @@
 #include <cstdlib>
 #include <ctime>
 #include <thread>
+#include <fstream>
 
 using namespace std;
 
 //定义方向 限定作用域的枚举类，Direction与UP/DOWN/LEFT/RIGHT作用域相同，相当于等价定义 UP=0,DOWN=1,LEFT=2,RIGHT=3
 enum class Direction {UP,DOWN,LEFT,RIGHT};
+
+//定义获得分数的类
+class Scoredef
+{
+    public:
+        string name;
+        int score;
+ 
+        Scoredef():name("test"),score(0) {}
+        ~Scoredef(){}
+};
 
 class SnakeGame
 {
@@ -23,10 +35,12 @@ class SnakeGame
         SnakeGame(int width,int height):width(width),height(height),score(0),gameover(false),menuover(false),gamelevel(500)
         {
             srand(time(nullptr));   //设置随机种子，nullptr:即空指针（null point）也可直接改为NULL或0
+            readfile();
         }
         //析构函数，推出时关闭
         ~SnakeGame()
         {
+            writefile();
             delwin(window);
             endwin();
         }
@@ -140,6 +154,7 @@ class SnakeGame
        int max_x,max_y;
        WINDOW *window;  //定义新窗口
        vector<pair<int,int>> snake;     //定义snake的位置数组
+       vector<Scoredef> scorelist;      //定义获取分数的结构;
        pair<int,int> food;  //定义食物的位置
        Direction direction=Direction::RIGHT;    //初始化：sanke往右移动
 
@@ -271,25 +286,51 @@ class SnakeGame
 
        void showGameOver()
        {
-            nodelay(stdscr,false);   //非阻塞模式,多线程并发输入，使程序不用一直在getch()等待用户输入
+            Scoredef scorelastest;
+            char temp[10];
+            
+            nodelay(stdscr,false);   //打开阻塞模式,使程序在getch()等待用户输入
+            echo();                        //打开回显
             werase(window);     //清楚window窗口内容
             refresh();  //将stdscr缓冲区中的数据显示在屏幕上
             wrefresh(window);
             wattron(window,COLOR_PAIR(3));
             string gameOverText="Game Over!";
-            mvwprintw(window,height/2,(width-gameOverText.length())/2,"%s",gameOverText.c_str());     //在指定位置打印,c_srt()返回字符串首地址
+            mvwprintw(window,height/4,(width-gameOverText.length())/2,"%s",gameOverText.c_str());     //在指定位置打印,c_srt()返回字符串首地址
             if(false==menuover)
             {
                  string scoreText="Score: "+to_string(score);    //to_string(xxx)将括号内数字转换称字符串
-                 mvwprintw(window,height/2+1,(width-scoreText.length())/2,"%s",scoreText.c_str());
-            }
+                 mvwprintw(window,height/4+1,(width-scoreText.length())/2,"%s",scoreText.c_str());
+                 string inputText="Please input your name:";
+                 mvwprintw(window,height/4+2,(width-inputText.length())/2,"%s",inputText.c_str());
+                 refresh();  //将stdscr缓冲区中的数据显示在屏幕上
+                 wrefresh(window);
+                 mvwgetstr(window,height/4+2,(width+inputText.length())/2,temp);
+                 scorelastest.name=temp;
+                 scorelastest.score=score;
+                 for(int i=0;i<scorelist.size();i++)
+                 {
+                    if(scorelist[i].score<=scorelastest.score)
+                    {
+                        scorelist.emplace(scorelist.begin()+i,scorelastest);
+                        break;
+                    }
+                 }
+           }
+           string headText="Ranking     Name           Score";
+           mvwprintw(window,height/4+3,(width-headText.length())/2,"%s",headText.c_str());
+           for(int j=0;j<=5;j++)
+           {
+              string heroeslist_text=to_string(j)+"         "+scorelist[j].name+"             "+to_string(scorelist[j].score);
+              mvwprintw(window,height/4+j+4,(width-headText.length())/2,"%s",heroeslist_text.c_str());
+           }
+                
             wattroff(window,COLOR_PAIR(3));
             refresh();  //将stdscr缓冲区中的数据显示在屏幕上
             wrefresh(window);
             getch();    //读取一个字符，为了等待用户输入后退出游戏
+            noecho();
        }
-
-
 
        bool isSnakeCell(int row,int col)
        {
@@ -302,6 +343,49 @@ class SnakeGame
             }
             return false;
        }
+       void readfile()
+        {
+            ifstream infile;    //open file by read mode
+            int index=0;
+            Scoredef scoretemp;
+            infile.open("heroescount.dat",ios::in);
+            if(!infile)
+            {
+                cout<<"reading data is error, please confirm database!!!"<<endl;
+                return;
+            }
+            else
+            {
+                infile>>index;
+                for(int i=0;i<index;i++)
+                {
+                    infile>>scoretemp.name>>scoretemp.score;
+                    scorelist.push_back(scoretemp);
+                }
+           }
+            infile.close();
+        }
+        void writefile()
+        {
+            ofstream outfile;   //open file by write mode
+            outfile.open("heroescount.dat",ios::out);     //after context of file is clear, write new context to file
+            
+            if(!outfile)
+            {
+                cout<<endl;
+                cout<<"writing data is error, please confirm database!!!"<<endl;
+                return;
+            }
+            else
+            {
+                outfile<<scorelist.size()<<endl;
+                for(int i=0;i<scorelist.size();i++)
+                {
+                    outfile<<" "<<scorelist[i].name<<" "<<scorelist[i].score<<endl;
+                }
+            }
+            outfile.close();
+        }
 };
 
 int main()
