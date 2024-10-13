@@ -22,7 +22,7 @@ int main()
     future<string> future_obj=proms.get_future();
 
     //给线程传递promise对象
-    //move强制将左值转换为右值
+    //move()强制将左值转换为右值
     thread t1(modfiyMessage,move(proms),msg_str);    //创建线程需要一个可调用的函数或者函数对象，作为线程入口函数
                                                     //基本语法：thread t(functon_name,args,...)
                                                     //functon_name是线程入口函数或者可调用对象名称
