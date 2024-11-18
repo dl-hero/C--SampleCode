@@ -31,7 +31,7 @@ int main()
 
     cout<<*sp2<<endl;       //40
     cout<<sp1.use_count()<<endl;    //0
-    cout<<sp2.use_count()<<endl;    //2
+    cout<<sp2.use_count()<<endl;    //1
     cout<<sp2.unique()<<endl;       //1
     Check(wp);  //still
     sp2.reset();
